@@ -1,0 +1,6 @@
+# Make a copy of this file and name it config.ini
+# Then edit the values below to match your environment
+DB_HOST=   
+DB_USERNAME=   
+DB_PASSWORD=
+DB_NAME=

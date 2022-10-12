@@ -1,0 +1,17 @@
+# https://getdoc.wiki/Comment_r%C3%A9%C3%A9crire_des_URL_avec_mod_rewrite_pour_Apache_sur_Ubuntu_22.04
+# par défaut rewite n'est pas activé sur apache / ubuntu
+# pour activer le mode rewrite, 
+# sudo a2enmod rewrite
+# sudo service apache2 restart
+
+# Activation de la réécriture d'URL au niveau d'Apache
+RewriteEngine On
+
+# dynamically setup base URI
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+RewriteRule ^(.*) - [E=BASE_URI:%1]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?_url=/$1 [QSA,L]
+
