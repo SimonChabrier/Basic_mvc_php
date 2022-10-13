@@ -14,7 +14,7 @@ class CoreController
      */
     protected function show(string $viewName, $viewData = [])
     {   
-        //dump($_SERVER['HTTP_HOST']);
+
         // Globalise l'instance courante d'AltoRouter crée sur l'index
         // cet objet permettra d'accéder aux méthodes d'AltoRouter dans les views
         // eg : $router->generate('main-home')...
@@ -64,9 +64,6 @@ class CoreController
     
     protected function initToken()
     {
-        // if (!isset($_SESSION['token'])) {
-        //     $_SESSION['token'] = bin2hex(random_bytes(32));
-        // }
         $token = bin2hex(random_bytes(32));
         $_SESSION['token'] = $token;
         return $token;

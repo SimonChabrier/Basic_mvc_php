@@ -28,7 +28,7 @@ class SearchUtils
     $search_result = array_filter($data, function ($data_item) use ($input_value) {
         return stripos($data_item['title'], $input_value) !== false ? true : false;
     });
-        return $search_result == [] ? 'Pas de résultat !' : $search_result;
+        return $search_result == [] ? null : $search_result;
     }
 }
 

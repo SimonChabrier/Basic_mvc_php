@@ -53,6 +53,14 @@ class User extends UserRepository
      */
     protected $created_at;
 
+    function __construct($username, $email, $password, $status, $role) {
+        $this->username = $username;
+        $this->email = $email;
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
+        $this->status = $status;
+        $this->role = $role;
+    }
+
 
     /**
      * Get the value of id
