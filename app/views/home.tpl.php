@@ -6,7 +6,7 @@
         <?php foreach ($courses as $course) : ?>
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card mb-4">
-                <a href="<?= $router->generate('course-id', ['id' => $cours->getId()]) ?>">
+                <a href="<?= $router->generate('course-id', ['id' => $course->getId()]) ?>">
                     <img src="<?='/assets/images/' . $course->getPicture() ?>" class="card-img-top" alt="...">
                 </a>
                     <div class="card-body">

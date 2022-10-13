@@ -5,6 +5,8 @@ use App\Models\Course;
 use App\Utils\SearchUtils;
 use App\Utils\DateUtils;
 use App\Utils\UrlValue;
+use App\Utils\Redirect;
+use App\Utils\Upload;
 
 
 class CourseController extends CoreController
@@ -44,13 +46,9 @@ class CourseController extends CoreController
      */
     public function showCourse()
     {   
-        $id = new UrlValue();
-        $id = $id->findUrlLastSegment();
-        $course = new Course();
-        $course = $course->find($id);
-
-        $date = new DateUtils();
-        $value = $date->compareDate($course->getCreated_at());
+        $id = UrlValue::findUrlLastSegment();
+        $course = Course::find($id);
+        $value = DateUtils::compareDate($course->getCreated_at());
 
         $this->show('cours', ['course' => $course, 'value' => $value]);
     }
@@ -62,10 +60,9 @@ class CourseController extends CoreController
      */
     public function showForm() 
     {   
-        $id = new UrlValue();
-        $id = $id->findUrlLastSegment();
-        $course = Course::find($id);
 
+        $id = UrlValue::findUrlLastSegment();
+        $course = Course::find($id);
         $courses = Course::findAll();
         
         $this->show('form', ['courses' => $courses, 'course' => $course]);
@@ -98,14 +95,14 @@ class CourseController extends CoreController
 
         if($_FILES['picture'])
         {
-            $this->processUploadPicture($_FILES['picture'], $course);
+            Upload::processUploadPicture($_FILES['picture'], $course);
         }
      
         if ($course->insert()) 
         {   
             //TODO ajouter un message de succès
             //TODO rediriger vers le nouveau post créé
-            $this->redirect('main-home');
+            Redirect::redirect('main-home');
         } 
 
         else 
@@ -116,32 +113,6 @@ class CourseController extends CoreController
         $this->show('form', []);
     }
     
-    /**
-     * @param array $_FILES['picture']
-     * @param Course $course
-     * @return void
-     */
-    public function processUploadPicture(array $picture, object $object)
-    {
-        $picture = $_FILES['picture']['tmp_name'];
-        $name = $_FILES['picture']['name'];
-        $name  = uniqid() . '.jpeg';
-        
-        if($_FILES['picture']['size'] > 500000){
-            throw new \Exception('Le fichier est trop gros');
-        };
-        
-        if($_FILES['picture']['error'] > 0){
-            throw new \Exception('Erreur lors du transfert de l\'image');
-        };
-
-        $object->setPicture($name);
-        // move file to public assets/images folder
-        move_uploaded_file($picture, __DIR__ . '/../../public/assets/images/' . $name);
-        //then set the user rigths on this file
-        chmod(__DIR__ . '/../../public/assets/images/'.$name, 0777);
-    }
-
     /**
      * Process the form to update a course
      * @return void
@@ -178,10 +149,10 @@ class CourseController extends CoreController
 
                 if ($course->update($id)) {
                     //TODO : ajouter un message si modification n'a été apportée
-                    $this->redirectLastPageVisited($redirect);
+                    Redirect::redirectLastPageVisited($redirect);
                 } elseif ($course === $course) {
                     //TODO : ajouter un message si aucune modification n'a été apportée
-                    $this->redirectLastPageVisited($redirect);
+                    Redirect::redirectLastPageVisited($redirect);
                 } else {
                     strlen($short_description) > 255 ? $errors[] = 'La description courte ne doit pas dépasser 255 caractères' : 'erreur inconnue';
                     $this->show('form', ['errors' => $errors, 'course' => $course]);
@@ -212,7 +183,8 @@ class CourseController extends CoreController
         if ($course->delete($id)) {
             unlink(__DIR__ . '/../../public/assets/images/' . $course->getPicture());
 
-            $this->redirect('main-home');
+            Redirect::redirect('main-home');
+
         } else {
             throw new \Exception('Erreur lors de la suppression');
         } 

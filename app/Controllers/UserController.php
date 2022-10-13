@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Utils\Redirect;
+use App\Utils\Token;
 
 class UserController extends CoreController
 {
@@ -41,7 +43,9 @@ class UserController extends CoreController
                 // put username in session
                 $_SESSION['username'] = $_POST['username'];
                 $_SESSION['role'] = $user->getRole();
-                $this->redirect('main-home');
+
+                $link = new Redirect();
+                $link->redirect('main-home');
             } 
             else 
             {
@@ -59,7 +63,7 @@ class UserController extends CoreController
         //TODO retourné les valeurs déjà saisies par l'utilisateur dans le form si erreur
         $redirect = null;
         $errors = [];
-   
+        dump($errors);
         //* process POST request
         if (isset($_POST['loginBtn'])) 
         {   
@@ -70,7 +74,7 @@ class UserController extends CoreController
             if ($_POST['username'] === '')
             {
                 $errors[] = "Nom d'utilisateur non renseigné";
-                $newToken = $this->initToken();
+                $newToken = Token::initToken();
                 $_SESSION['token'] = $newToken;
                 
                 $this->show('login',['token' => $newToken,'errors' => $errors]);
@@ -80,7 +84,9 @@ class UserController extends CoreController
             if ($_POST['password'] === '')
             {
                 $errors[] = "Mot de passe non renseigné";
-                $newToken = $this->initToken();
+                $newToken = new Token();
+                $newToken->initToken();
+
                 $_SESSION['token'] = $newToken;
                 
                 $this->show('login',['token' => $newToken,'errors' => $errors]);
@@ -98,13 +104,15 @@ class UserController extends CoreController
                     $_SESSION['role'] = $user->getRole();
                     unset($_SESSION['token']);
 
-                    $this->redirectLastPageVisited($redirect);
+                    $link = new Redirect();
+                    $link->redirectLastPageVisited($redirect);
                 }
+
                 // if password is not correct
                 if(!password_verify($_POST['password'], $user->getPassword()))
                 {
                     $errors[] = "Mot de passe incorrect";
-                    $newToken = $this->initToken();
+                    $newToken = Token::initToken();
                     $_SESSION['token'] = $newToken;
                     
                     $this->show('login',['token' => $newToken,'errors' => $errors]);
@@ -114,7 +122,7 @@ class UserController extends CoreController
                 if (!$user) 
                 {
                     $errors[] = "Utilisateur inconnnu !";
-                    $newToken = $this->initToken();
+                    $newToken = Token::initToken();
                     $_SESSION['token'] = $newToken;
                     
                     $this->show('login',['token' => $newToken,'errors' => $errors]);
@@ -123,8 +131,10 @@ class UserController extends CoreController
             }
         }
 
+        $token = Token::initToken();
+
         //* GET login page
-        $this->show('login', ['token' => $this->initToken()], ['errors' => $errors]);
+        $this->show('login', ['token' => $token, 'errors' => $errors]);
     }
 
     /**
@@ -133,6 +143,7 @@ class UserController extends CoreController
      */
     public function logOut(){
         session_destroy();
-        $this->redirect('main-home');
+        $link = new Redirect();
+        $link->redirect('main-home');
     }
 }

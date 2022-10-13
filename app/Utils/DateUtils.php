@@ -12,7 +12,7 @@ class DateUtils
      * @param string $date
      * @return string
      */
-    public function formatDate($date)
+    public static function formatDate($date)
     {
         $date = new \DateTime($date);
         $date = $date->format('d/m/Y');
@@ -24,7 +24,7 @@ class DateUtils
      * @param string $date
      * @return string
      */
-    public function formatDateTime($date)
+    public static function formatDateTime($date)
     {
         $date = new \DateTime($date);
         $date = $date->format('d/m/Y H:i');
@@ -36,7 +36,7 @@ class DateUtils
      * @param string $date
      * @return string
      */
-    public function compareDate($date2)
+    public static function compareDate($date2)
     {
     $date1 = date_create('now', new DateTimeZone('Europe/Paris'));
     $date2 = date_create($date2);

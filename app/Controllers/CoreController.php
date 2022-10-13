@@ -33,40 +33,11 @@ class CoreController
         
         // Each couse is now available in all views for navbar
         $navValues = Course::findAllPublishedCourseForNav();
-        extract($navValues);
 
         //dump($_SESSION);
         require_once __DIR__ . '/../views/layout/header.tpl.php';
         require_once __DIR__ . '/../views/' . $viewName . '.tpl.php';
         require_once __DIR__ . '/../views/layout/footer.tpl.php';
-
-    }
-    
-    /**
-     * Méthode permettant de faire une redirection vers une autre page
-     * à partir l'id de la route définie dans AltoRouter
-     *
-     * @param string $routeId
-     * @return void
-     */
-    protected function redirect($routeId)
-    {
-        global $router;
-        header('Location: ' . $router->generate($routeId));
-        exit();
-    }
-
-    protected function redirectLastPageVisited($redirect)
-    {
-        header('Location: ' . $redirect);
-        exit();
-    }
-    
-    protected function initToken()
-    {
-        $token = bin2hex(random_bytes(32));
-        $_SESSION['token'] = $token;
-        return $token;
 
     }
         

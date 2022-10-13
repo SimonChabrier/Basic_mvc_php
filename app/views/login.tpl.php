@@ -1,7 +1,7 @@
 <div class="container">
     <form action="" class="form" method="POST">
     <h1>login</h1>
-    <?php if (isset($errors)) : ?>
+    <?php if (isset($errors) && $errors != []) : ?>
         <div class="alert alert-danger text-center" role="alert">
             <?php foreach ($errors as $error) : ?>
                 <p><?= $error ?></p>
