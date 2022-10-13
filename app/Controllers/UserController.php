@@ -63,7 +63,7 @@ class UserController extends CoreController
         //TODO retourné les valeurs déjà saisies par l'utilisateur dans le form si erreur
         $redirect = null;
         $errors = [];
-        dump($errors);
+        //dump($errors);
         //* process POST request
         if (isset($_POST['loginBtn'])) 
         {   
