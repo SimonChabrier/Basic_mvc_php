@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\Course;
-
+use App\Utils\Upload;
 
 class CoreController
 {   
@@ -34,6 +34,7 @@ class CoreController
         // Each couse is now available in all views for navbar
         $navValues = Course::findAllPublishedCourseForNav();
 
+      
         //dump($_SESSION);
         require_once __DIR__ . '/../views/layout/header.tpl.php';
         require_once __DIR__ . '/../views/' . $viewName . '.tpl.php';
