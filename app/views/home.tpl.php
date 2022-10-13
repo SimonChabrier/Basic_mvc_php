@@ -13,11 +13,11 @@
                         <h5 class="card-title"><?= $course->getTitle() ?></h5>
                         <p class="card-text">
                             <?= substr($course->getShort_description(), 0, 150 ) ?> 
-                            <a href="<?= $router->generate('course-id', ['id' => $cours->getId()]) ?>"> 
+                            <a href="<?= $router->generate('course-id', ['id' => $course->getId()]) ?>"> 
                                 ...
                             </a>
                         </p>
-                        <a href="<?= $router->generate('course-id', ['id' => $cours->getId()]) ?>" class="btn btn-primary">Lire</a>
+                        <a href="<?= $router->generate('course-id', ['id' => $course->getId()]) ?>" class="btn btn-primary">Lire</a>
                     </div>
                 </div>
             </div>

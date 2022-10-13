@@ -46,8 +46,8 @@ class CourseController extends CoreController
             }
         });
         
-        dump($result);
-        
+        //dump($result);
+        dump($courses);
         $this->show('home', ['courses' => $courses]);
     }
 
@@ -59,7 +59,11 @@ class CourseController extends CoreController
     {   
         $id = $this->findUrlLastSegment();
         $course = Course::find($id);
-        $this->show('cours', ['course' => $course]);
+
+        $date = new \App\Utils\Date();
+        $value = $date->compareDate($course->getCreated_at());
+        dump($value);
+        $this->show('cours', ['course' => $course, 'value' => $value]);
     }
 
     /**
