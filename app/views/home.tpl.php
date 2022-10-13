@@ -2,7 +2,7 @@
   <!-- cards -->
   <div class="container mt-2">
     <section class="row">
-        <?php if(is_array($courses) || is_object($courses)): ?>
+        <?php if(is_array($courses)): ?>
         <?php foreach ($courses as $course) : ?>
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card mb-4">
@@ -42,7 +42,7 @@
             </div>
         <?php endif ?>      
 
-        <?php if (is_array($results) || $results != 'Pas de résultat !'): ?>
+        <?php if (is_array($results)): ?>
         <?php foreach ($results as $result) : ?>
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card mb-4">
@@ -61,7 +61,12 @@
                     </div>
                 </div>
             </div>
+          
         <?php endforeach ?>
+        <?php endif ?>
+
+        <?php if (is_array($results) || $results == 'Pas de résultat !'): ?>
+            
         <?php endif ?>
     </section>
 </div>
