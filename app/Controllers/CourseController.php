@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 use App\Models\Course;
-use App\Utils\Search;
+use App\Utils\SearchUtils;
+use App\Utils\DateUtils;
+use App\Utils\UrlValue;
 
 
 class CourseController extends CoreController
@@ -14,15 +16,20 @@ class CourseController extends CoreController
      */
     public function showCourses()
     {   
-        $courses = Course::findAll();
+        $courses = new Course();
+        $courses = $courses->findAll();
 
         $input_value = $_GET['searchInputValue'] ?? null;
 
         if (isset($input_value)) {
-            $coursesArray = Course::findAllCoursesAndReturnASSOC();
-            $results = Search::findInJson($coursesArray, $input_value);
-            //reset $courses with the results of the search
-            $courses = 0;
+            
+            $coursesArray = new Course();
+            $coursesArray = $coursesArray->findAllCoursesAndReturnASSOC();
+
+            $results = new SearchUtils();
+            $results = $results->findInJson($coursesArray, $input_value);
+            //reset $courses if results in search
+            $courses = null;
         }
         
         $this->show('home', [
@@ -37,12 +44,14 @@ class CourseController extends CoreController
      */
     public function showCourse()
     {   
-        $id = $this->findUrlLastSegment();
-        $course = Course::find($id);
+        $id = new UrlValue();
+        $id = $id->findUrlLastSegment();
+        $course = new Course();
+        $course = $course->find($id);
 
-        $date = new \App\Utils\Date();
+        $date = new DateUtils();
         $value = $date->compareDate($course->getCreated_at());
-        dump($value);
+
         $this->show('cours', ['course' => $course, 'value' => $value]);
     }
 
@@ -53,7 +62,8 @@ class CourseController extends CoreController
      */
     public function showForm() 
     {   
-        $id = $this->findUrlLastSegment();
+        $id = new UrlValue();
+        $id = $id->findUrlLastSegment();
         $course = Course::find($id);
 
         $courses = Course::findAll();
@@ -153,7 +163,8 @@ class CourseController extends CoreController
             $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
             $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
 
-            $id = $this->findUrlLastSegment();
+            $id = new UrlValue();
+            $id = $id->findUrlLastSegment();
             
             $course = Course::find($id);
 
@@ -177,7 +188,9 @@ class CourseController extends CoreController
                 }
             }
         
-        $id = $this->findUrlLastSegment();
+        $id = new UrlValue();
+        $id = $id->findUrlLastSegment();
+
         $course = Course::find($id);
         $courses = Course::findAll();
 
@@ -191,7 +204,9 @@ class CourseController extends CoreController
      */
     public function courseDelete()
     {   
-        $id = $this->findUrlLastSegment();
+        $id = new UrlValue();
+        $id = $id->findUrlLastSegment();
+
         $course = Course::find($id);
 
         if ($course->delete($id)) {

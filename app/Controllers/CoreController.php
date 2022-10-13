@@ -41,21 +41,6 @@ class CoreController
         require_once __DIR__ . '/../views/layout/footer.tpl.php';
 
     }
-
-    /**
-     * find last url value 
-     * use this on methods need to have an id as parameter
-     * @return string
-     */
-    public function findUrlLastSegment()
-    {
-        $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $segments = explode('/', $url);
-        $numSegments = count($segments); 
-        $id = $segments[$numSegments - 1];
-
-        return $id;
-    }
     
     /**
      * Méthode permettant de faire une redirection vers une autre page

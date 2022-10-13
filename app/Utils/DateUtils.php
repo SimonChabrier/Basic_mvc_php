@@ -5,7 +5,7 @@ namespace App\Utils;
 use DateTime;
 use DateTimeZone;
 
-class Date
+class DateUtils
 {   
     /**
      * Return a date in french format

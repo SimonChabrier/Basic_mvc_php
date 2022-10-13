@@ -3,7 +3,7 @@
 namespace App\Utils;
 
 
-class Search
+class SearchUtils
 {
     /**
      * Find a value in a json
