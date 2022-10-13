@@ -1,5 +1,6 @@
 <?php
 namespace App\Utils;
+use App\Utils\CropPicture;
 
 class Upload 
 {
@@ -12,6 +13,7 @@ class Upload
     public static function processUploadPicture(array $picture, object $object)
     {
         $picture = $_FILES['picture']['tmp_name'];
+        
         $name = $_FILES['picture']['name'];
         $name  = uniqid() . '.jpeg';
         
@@ -24,6 +26,7 @@ class Upload
         };
 
         $object->setPicture($name);
+        
         // move file to public assets/images folder
         move_uploaded_file($picture, __DIR__ . '/../../public/assets/images/' . $name);
         //then set the user rigths on this file

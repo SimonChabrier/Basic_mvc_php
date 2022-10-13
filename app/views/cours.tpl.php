@@ -14,7 +14,7 @@
             <img class="card-img-top" src="<?= '/assets/images/' . $course->getPicture() ?>" alt="Card image cap">
             <a class="btn btn-primary mt-1" href="<?= $router->generate('update-course', ['id' => $course->getId()]) ?>">Modifier le cours</a>
             <a class="btn btn-primary mt-1" href="<?= $router->generate('delete-course', ['id' => $course->getId()]) ?>">Supprimer le cours</a>
-            <p class="mt-2"><?= $value ?></p>
+            <p class="mt-2"><?= $date ?></p>
         </div>
         <div class="col-sm-12 col-lg-6 mb-4">
           <article>

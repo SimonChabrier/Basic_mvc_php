@@ -23,8 +23,8 @@ class CourseRepository
         ';
 
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Course');
-        
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Course::class);
+
         return $results;
     }
 
@@ -64,6 +64,7 @@ class CourseRepository
 
         $pdoStatement = $pdo->query($sql);
         $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Course');
+        
         
         return $results;
     }

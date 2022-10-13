@@ -8,28 +8,22 @@ use App\Utils\UrlValue;
 use App\Utils\Redirect;
 use App\Utils\Upload;
 
-
 class CourseController extends CoreController
 {   
     /**
      * List all courses
-     *
      * @return void
      */
     public function showCourses()
     {   
-        $courses = new Course();
-        $courses = $courses->findAll();
+        $courses = Course::findAll();
 
         $input_value = $_GET['searchInputValue'] ?? null;
 
         if (isset($input_value)) {
             
-            $coursesArray = new Course();
-            $coursesArray = $coursesArray->findAllCoursesAndReturnASSOC();
-
-            $results = new SearchUtils();
-            $results = $results->findInJson($coursesArray, $input_value);
+            $coursesArray = Course::findAllCoursesAndReturnASSOC();
+            $results = SearchUtils::findInJson($coursesArray, $input_value);
             //reset $courses if results in search
             $courses = null;
         }
@@ -48,9 +42,9 @@ class CourseController extends CoreController
     {   
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
-        $value = DateUtils::compareDate($course->getCreated_at());
+        $date = DateUtils::compareDate($course->getCreated_at());
 
-        $this->show('cours', ['course' => $course, 'value' => $value]);
+        $this->show('cours', ['course' => $course, 'date' => $date]);
     }
 
     /**
@@ -94,7 +88,8 @@ class CourseController extends CoreController
         //TODO ajouter les champs manquant ici et dans le model en propriétés et les décommenter dans le formulaire
 
         if($_FILES['picture'])
-        {
+        {   
+            
             Upload::processUploadPicture($_FILES['picture'], $course);
         }
      
@@ -134,9 +129,7 @@ class CourseController extends CoreController
             $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
             $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
 
-            $id = new UrlValue();
-            $id = $id->findUrlLastSegment();
-            
+            $id = UrlValue::findUrlLastSegment();
             $course = Course::find($id);
 
             $course->setTitle($title)
@@ -159,9 +152,7 @@ class CourseController extends CoreController
                 }
             }
         
-        $id = new UrlValue();
-        $id = $id->findUrlLastSegment();
-
+        $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
         $courses = Course::findAll();
 
@@ -175,9 +166,7 @@ class CourseController extends CoreController
      */
     public function courseDelete()
     {   
-        $id = new UrlValue();
-        $id = $id->findUrlLastSegment();
-
+        $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
 
         if ($course->delete($id)) {
