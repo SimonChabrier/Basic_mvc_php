@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\Course;
+use App\Utils\Search;
 
 
 class CourseController extends CoreController
@@ -14,41 +15,20 @@ class CourseController extends CoreController
     public function showCourses()
     {   
         $courses = Course::findAll();
+
+        $input_value = $_GET['searchInputValue'] ?? null;
+
+        if (isset($input_value)) {
+            $coursesArray = Course::findAllCoursesAndReturnASSOC();
+            $results = Search::findInJson($coursesArray, $input_value);
+            //reset $courses with the results of the search
+            $courses = 0;
+        }
         
-        //create a Json file with all courses;       
-        $coursesArray = Course::findAllCoursesAndReturnASSOC();
-        $json = json_encode($coursesArray);
-        $file = 'courses.json';
-
-        //public path
-        //$path = __DIR__ . '/../../public/assets/json/';
-
-        //app path
-        $path = __DIR__ . './../json/';
-        file_put_contents($path . $file, $json);
-
-        //recherche une correspondance de valeur dans un tableau associatif
-        // ici dans title la valeur "Quos eos ipsa quo amet nihil do" et on tourve le cours 
-        // qui a ce titre....
-        $array = json_decode($json, true);
-        $search_value = "necessitatibus";
-
-        $result = array_filter($array, function ($search_index) use ($search_value) {
-        
-        // chercher la valeur strictement exacte    
-        //return ($search_index['title'] == $search_value);
-
-            //chercher une valeur jusqu'à 5 signes sucessifs correspondants dans la chaine de caractère
-            if (strpos($search_index['title'], $search_value, 5) !== false) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-        
-        //dump($result);
-        dump($courses);
-        $this->show('home', ['courses' => $courses]);
+        $this->show('home', [
+            'courses' => $courses,
+            'results' => $results ?? null,
+        ]);
     }
 
     /**

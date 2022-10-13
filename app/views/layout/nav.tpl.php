@@ -35,6 +35,10 @@
           <?= isset($_SESSION['username']) ? '<span class="badge bg-primary"> Utilisateur connecté : ' . $_SESSION['username'] . '</span>' : '' ?> 
         </li>
       </ul>
+      <form class="d-flex" method="GET">
+        <input class="form-control me-2" name="searchInputValue" type="search" placeholder="Recherche" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Chercher</button>
+      </form>
     </section>
   </div>
 </nav>
