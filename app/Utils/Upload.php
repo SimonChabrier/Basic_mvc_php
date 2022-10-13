@@ -3,6 +3,7 @@ namespace App\Utils;
 
 class Upload 
 {
+    const ROOT = './assets/images/';
 
     /**
      * @param array $_FILES['picture']
@@ -27,9 +28,9 @@ class Upload
         $object->setPicture($name);
 
         // move file to public assets/images folder
-        move_uploaded_file($picture, __DIR__ . '/../../public/assets/images/' . $name);
+        move_uploaded_file($picture, self::ROOT . $name);
         //then set the user rigths on this file
-        chmod(__DIR__ . '/../../public/assets/images/'.$name, 0777);
+        chmod(self::ROOT . $name, 0777);
         
         
 
