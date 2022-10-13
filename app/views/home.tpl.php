@@ -30,8 +30,7 @@
 
 <div class="container mt-2">
     <section class="row">
-
-        <?php if ($results == null): ?>
+        <?php if ($results == null && isset($_GET['searchInputValue'])): ?>
             <div class="alert alert-danger text-center" role="alert">
                 Aucun résultat pour votre recherche
             </div>
