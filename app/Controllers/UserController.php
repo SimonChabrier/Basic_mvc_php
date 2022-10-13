@@ -21,13 +21,19 @@ class UserController extends CoreController
      */
     public function registration()
     {   
+
         if (isset($_POST['registerBtn']))
         { 
             $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
             $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
         
-            $user = New User($username, $email, $password, 1, 'ROLE_USER');
+            $user = New User();
+            $user->setUsername($username);
+            $user->setEmail($email);
+            $user->setPassword(password_hash($password, PASSWORD_DEFAULT));
+            $user->setStatus(1);
+            $user->setRole("ROLE_USER");
 
             //persist user in database redirect to home page
             if ($user->insert()) 
