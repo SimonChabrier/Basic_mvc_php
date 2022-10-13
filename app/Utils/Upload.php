@@ -1,6 +1,5 @@
 <?php
 namespace App\Utils;
-use App\Utils\CropPicture;
 
 class Upload 
 {
@@ -11,12 +10,12 @@ class Upload
      * @return void
      */
     public static function processUploadPicture(array $picture, object $object)
-    {
+    {   
+
         $picture = $_FILES['picture']['tmp_name'];
-        
         $name = $_FILES['picture']['name'];
         $name  = uniqid() . '.jpeg';
-        
+
         if($_FILES['picture']['size'] > 500000){
             throw new \Exception('Le fichier est trop gros');
         };
@@ -26,11 +25,14 @@ class Upload
         };
 
         $object->setPicture($name);
-        
+
         // move file to public assets/images folder
         move_uploaded_file($picture, __DIR__ . '/../../public/assets/images/' . $name);
         //then set the user rigths on this file
         chmod(__DIR__ . '/../../public/assets/images/'.$name, 0777);
+        
+        
+
     }
 
 }
