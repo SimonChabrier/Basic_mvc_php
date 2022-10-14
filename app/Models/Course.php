@@ -281,7 +281,7 @@ class Course extends CourseRepository
      * @return  string
      */ 
     public function getProgram_items()
-    {
+    {   
         return $this->program_items;
     }
 

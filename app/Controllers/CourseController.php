@@ -32,10 +32,10 @@ class CourseController extends CoreController
         //dump($last_course);
 
         $user_publication = Course::findUserPublishedCourses();
-        dump($user_publication);
+        //dump($user_publication);
 
         $courses = Course::findAllPublishedCourses();
-
+        //dump(gettype($courses[0]->getProgram_Items()));
         $input_value = $_GET['searchInputValue'] ?? null;
 
         if (isset($input_value)) {
@@ -105,10 +105,10 @@ class CourseController extends CoreController
         ->setDescription($_POST['description'])
         ->setIs_published($_POST['published']);
 
-        
+
         $data = htmlspecialchars($_POST['program_items']);
         foreach (preg_split('/\n|\r\n?/', $data) as $line) {
-            $array[] = $line;   
+            $array[] = $line; 
         };
         $array = json_encode($array);
         $course->setProgram_items($array);
