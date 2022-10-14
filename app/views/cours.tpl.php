@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <td>Enseignant</td>
-              <td>Pierre C</td>
+              <td><?= $teacherName ?></td>
             </tr>
             <tr>
               <td>Durée</td>

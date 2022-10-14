@@ -70,6 +70,27 @@ class CourseRepository extends Query
         return $results;
     }
     
+    /**
+     * Find Teacher name by course Id
+     * @param int $id
+     */
+    static function findCourseTeacherName($id){
+        $pdo = Database::getPDO();
+        
+        $sql = 'SELECT name
+        FROM teacher
+        LEFT JOIN course ON teacher.id = course.teacher_id
+        WHERE course.teacher_id = :id
+        ';
+
+        $pdoStatement = $pdo->prepare($sql);
+        $pdoStatement->bindValue(':id', $id, PDO::PARAM_INT);
+        $pdoStatement->execute();
+        $teacherName = $pdoStatement->fetchObject(Course::class);
+
+        return $teacherName;
+    }
+
     
     /**
     * find One Course from Database
@@ -121,8 +142,8 @@ class CourseRepository extends Query
         $pdo = Database::getPDO();
         
         $sql = '
-        INSERT INTO `course` (`title`, `price`, `duration`, `picture`, `short_description`, `description`, `is_published`, `user_id`, `program_items`, `date`)
-        VALUES (:title, :price, :duration, :picture, :short_description , :description , :is_published, :user_id, :program_items, :date);
+        INSERT INTO `course` (`title`, `price`, `duration`, `picture`, `short_description`, `description`, `is_published`, `user_id`, `program_items`, `date`, `teacher_id`)
+        VALUES (:title, :price, :duration, :picture, :short_description , :description , :is_published, :user_id, :program_items, :date, :teacher_id);
         ';
         
         $pdoStatement = $pdo->prepare($sql);
@@ -137,6 +158,7 @@ class CourseRepository extends Query
         $pdoStatement->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
         $pdoStatement->bindValue(':program_items', $this->program_items, PDO::PARAM_STR);
         $pdoStatement->bindValue(':date', $this->date, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':teacher_id', $_POST['teacher_id'], PDO::PARAM_INT);
 
         $pdoStatement->execute();
         

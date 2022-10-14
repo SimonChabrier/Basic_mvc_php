@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 use App\Utils\Database;
+
 use PDO;
 
 class Query

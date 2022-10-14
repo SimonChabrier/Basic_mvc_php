@@ -25,7 +25,6 @@ class CourseController extends CoreController
             $is_published = $course_array['is_published'];
             if ($is_published == 1){
                 $result[] = $course_array;
-                //dump($result);
             }
         }
 
@@ -48,9 +47,11 @@ class CourseController extends CoreController
         }
 
         $this->show('home', [
-            'courses' => $courses,
+            'courses' => $courses ?? null,
             'search_results' => $search_results ?? null,
             'users' => $users ?? null,
+            'last_course' => $last_course ?? null,
+            'user_publication' => $user_publication ?? null,
         ]);
     }
 
@@ -63,12 +64,21 @@ class CourseController extends CoreController
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
 
+        //get teacher_id value from database on this object $course
+        $teacherId = get_object_vars($course)['teacher_id'];
+        //find course by this int type foreign key value
+        $teacher = Course::findCourseTeacherName($teacherId);
+        //get name value from database on this object $teacher
+        $teacherName = get_object_vars($teacher)['name'];
+
+        //get program items from json
         $items_string = $course->getProgram_Items();
+        //convert json to associative array
         $items_array = json_decode($items_string); 
 
         $date = DateUtils::compareDate($course->getCreated_at());
 
-        $this->show('cours', ['course' => $course, 'items_array' => $items_array, 'date' => $date]);
+        $this->show('cours', compact('course', 'items_array', 'date', 'teacherName'));
     }
 
     /**
@@ -82,9 +92,10 @@ class CourseController extends CoreController
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
         $courses = Course::findAllPublishedCourses();
-        $teachers = Teacher::findAllTeacher();
-       
-        $this->show('form', ['course' => $course, 'courses' => $courses, 'teachers' => $teachers]);
+        //$teachers = Teacher::findAllTeacher();
+        $teachers = Teacher::dynamicFindAll('teacher', Teacher::class, 'fetchAll', PDO::FETCH_CLASS);
+
+        $this->show('form', compact('course', 'courses', 'teachers'));
     }
 
     /**
@@ -97,23 +108,22 @@ class CourseController extends CoreController
         $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT);
         $duration = filter_input(INPUT_POST, 'duration', FILTER_VALIDATE_INT);
         $short_description = filter_input(INPUT_POST, 'short_description', FILTER_SANITIZE_SPECIAL_CHARS);
-        $picture = filter_input(INPUT_POST, 'picture');
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
-        $is_published = filter_input(INPUT_POST, 'is_published', FILTER_VALIDATE_BOOLEAN);
+        $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
         $program_items = filter_input(INPUT_POST, 'program_items', FILTER_SANITIZE_SPECIAL_CHARS);
         $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
         $course = new Course();
-        
-        $course->setTitle($_POST['title'])
-        ->setPrice($_POST['price'])
-        ->setDuration($_POST['duration'])
-        ->setShort_description($_POST['short_description'])
-        ->setDescription($_POST['description'])
-        ->setIs_published($_POST['published'])
+
+        $course->setTitle($title)
+        ->setPrice($price )
+        ->setDuration($duration)
+        ->setShort_description($short_description)
+        ->setDescription($description)
+        ->setIs_published($is_published)
         ->setDate($date = DateUtils::formatDate($date));
 
 
-        $data = htmlspecialchars($_POST['program_items']);
+        $data = htmlspecialchars($program_items);
         foreach (preg_split('/\n|\r\n?/', $data) as $line) {
             $array[] = $line; 
         };

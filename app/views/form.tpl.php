@@ -51,7 +51,7 @@
             
             <label for="teacher" class="mt-2">Professeur</label>
 
-              <select type="choice" id="choice teacher" class="form-control">
+              <select type="choice" name="teacher_id" id="choice teacher" class="form-control">
                   <option value="choiceinfo" disable>Choisir un professeur</option>
                   <?php foreach ($teachers as $teacher) : ?>
                   <option value="<?= $teacher->getId() ?>"> <?= $teacher->getName() ?> </option>

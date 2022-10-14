@@ -1,9 +1,9 @@
 <!-- page content -->
-
+<?php ?>
   <!-- cards -->
   <div class="container mt-2">
     <section class="row">
-        <?php if(is_array($courses)): ?>
+        <?php if(!empty($courses)): ?>
         <?php foreach ($courses as $course) : ?>
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card mb-4">
@@ -24,7 +24,9 @@
             </div>
         <?php endforeach ?>
         <?php else : ?>
-            <!-- no courses -->
+            <div class="alert alert-danger text-center" role="alert">
+                Aucun cours dans la base de données !
+            </div>
         <?php endif ?>
     </section>
 </div>
