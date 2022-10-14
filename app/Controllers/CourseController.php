@@ -64,12 +64,12 @@ class CourseController extends CoreController
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
 
-        //get teacher_id value from database on this object $course
-        $teacherId = get_object_vars($course)['teacher_id'];
-        //find course by this int type foreign key value
-        $teacher = Course::findCourseTeacherName($teacherId);
-        //get name value from database on this object $teacher
-        $teacherName = get_object_vars($teacher)['name'];
+        //get teacher_id property value from database on this object $course
+        $id = get_object_vars($course)['teacher_id'];
+        //find course using the int value of $id
+        $teacher = Course::findCourseTeacherName($id);
+        //finally get teacher name value from database on this object $teacher
+        $name = get_object_vars($teacher)['name'];
 
         //get program items from json
         $items_string = $course->getProgram_Items();
@@ -78,7 +78,7 @@ class CourseController extends CoreController
 
         $date = DateUtils::compareDate($course->getCreated_at());
 
-        $this->show('cours', compact('course', 'items_array', 'date', 'teacherName'));
+        $this->show('cours', compact('course', 'items_array', 'date', 'name'));
     }
 
     /**
