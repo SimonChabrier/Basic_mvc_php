@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <td>Enseignant</td>
-              <td><?= $name ?></td>
+              <td><?= $name == null ? 'non renseigné' : $name  ?></td>
             </tr>
             <tr>
               <td>Durée</td>

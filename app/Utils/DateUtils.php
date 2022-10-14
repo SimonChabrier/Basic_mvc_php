@@ -21,7 +21,7 @@ class DateUtils
      * @param string $date
      * @return string
      */
-    public static function formatDate($date)
+    public static function formatDateInFrench($date)
     {
         $date = new \DateTime($date);
         $date = $date->format('l j F Y');

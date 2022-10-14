@@ -68,8 +68,8 @@ class CourseController extends CoreController
         $id = get_object_vars($course)['teacher_id'];
         //find course using the int value of $id
         $teacher = Course::findCourseTeacherName($id);
-        //finally get teacher name value from database on this object $teacher
-        $name = get_object_vars($teacher)['name'];
+        //if $teacher = false, set $name to null else get teacher name value from database on this object $teacher
+        $teacher == null ? $name = null : $name = get_object_vars($teacher)['name'];
 
         //get program items from json
         $items_string = $course->getProgram_Items();
@@ -104,6 +104,7 @@ class CourseController extends CoreController
      */
     public function courseCreate()
     {   
+        //process post data
         $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
         $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT);
         $duration = filter_input(INPUT_POST, 'duration', FILTER_VALIDATE_INT);
@@ -112,45 +113,42 @@ class CourseController extends CoreController
         $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
         $program_items = filter_input(INPUT_POST, 'program_items', FILTER_SANITIZE_SPECIAL_CHARS);
         $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
+        
+        //start to create a new course
         $course = new Course();
-
         $course->setTitle($title)
         ->setPrice($price )
         ->setDuration($duration)
         ->setShort_description($short_description)
         ->setDescription($description)
         ->setIs_published($is_published)
-        ->setDate($date = DateUtils::formatDate($date));
+        ->setDate($date = DateUtils::formatDateInFrench($date));
 
-
+        //process program items
         $data = htmlspecialchars($program_items);
         foreach (preg_split('/\n|\r\n?/', $data) as $line) {
             $array[] = $line; 
         };
         $array = json_encode($array);
+        //set program items with processed data
         $course->setProgram_items($array);
         
-
-        //TODO ajouter les champs manquant ici et dans le model en propriétés et les décommenter dans le formulaire
-
-        if($_FILES['picture'])
-        {   
-            
+        //process image
+        if($_FILES['picture']){   
             Upload::processUploadPicture($_FILES['picture'], $course);
         }
      
-        if ($course->insert()) 
-        {   
+        if ($course->insert()){   
             //TODO ajouter un message de succès
             //TODO rediriger vers le nouveau post créé
             Redirect::redirect('main-home');
         } 
 
-        else 
-        {
+        else {
             echo 'Il y a une erreur';
         }
         
+        //display the form
         $this->show('form', []);
     }
     
