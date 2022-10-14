@@ -6,14 +6,14 @@ use App\Models\Course;
 use App\Utils\Database;
 use PDO;
 
-class CourseRepository
+class CourseRepository extends Query
 {   
 
     /**
     * find All Courses from Database
-    * @return array[]
+    * @return object[]
     */
-    static function findAll()
+    static function findAllPublishedCourses()
     {
         $pdo = Database::getPDO();
         
@@ -28,11 +28,12 @@ class CourseRepository
         return $results;
     }
 
+    
     /**
-    * find All Courses from Database
+    * find All published Courses from Database
     * @return array[]
     */
-    static function findAllCoursesAndReturnASSOC()
+    static function findAllPublishedCourseForSearch()
     {
         $pdo = Database::getPDO();
         
@@ -50,7 +51,7 @@ class CourseRepository
 
       /**
     * find All Courses from Database
-    * @return array[]
+    * @return object[]
     */
     static function findAllPublishedCourseForNav()
     {
@@ -63,7 +64,7 @@ class CourseRepository
         ';
 
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Course');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Course::class);
         
         
         return $results;
@@ -86,7 +87,6 @@ class CourseRepository
         $pdoStatement = $pdo->prepare($sql);
         $pdoStatement->bindValue(':id', $id, PDO::PARAM_INT);
         $pdoStatement->execute();
-        //$course = $pdoStatement->fetchObject(self::class);
         $course = $pdoStatement->fetchObject(Course::class);
         
         return $course;
@@ -101,8 +101,8 @@ class CourseRepository
         $pdo = Database::getPDO();
         
         $sql = '
-        INSERT INTO `course` (`title`, `price`, `duration`, `picture`, `short_description`, `description`, `is_published`)
-        VALUES (:title, :price, :duration, :picture, :short_description , :description , :is_published);
+        INSERT INTO `course` (`title`, `price`, `duration`, `picture`, `short_description`, `description`, `is_published`, `user_id`)
+        VALUES (:title, :price, :duration, :picture, :short_description , :description , :is_published, :user_id);
         ';
         
         $pdoStatement = $pdo->prepare($sql);
@@ -114,6 +114,7 @@ class CourseRepository
         $pdoStatement->bindValue(':short_description', $this->short_description, PDO::PARAM_STR);
         $pdoStatement->bindValue(':description', $this->description, PDO::PARAM_STR);
         $pdoStatement->bindValue(':is_published', $this->is_published, PDO::PARAM_BOOL);
+        $pdoStatement->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
         $pdoStatement->execute();
         
         $insertedRows = $pdoStatement->rowCount();

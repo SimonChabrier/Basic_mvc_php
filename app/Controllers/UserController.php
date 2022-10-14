@@ -43,7 +43,8 @@ class UserController extends CoreController
                 // put username in session
                 $_SESSION['username'] = $_POST['username'];
                 $_SESSION['role'] = $user->getRole();
-
+                $_SESSION['id'] = $user->getId();
+             
                 $link = new Redirect();
                 $link->redirect('main-home');
             } 
@@ -102,6 +103,7 @@ class UserController extends CoreController
                 {                   
                     $_SESSION['username'] = $_POST['username'];
                     $_SESSION['role'] = $user->getRole();
+                    $_SESSION['id'] = $user->getId();
                     unset($_SESSION['token']);
 
                     $link = new Redirect();

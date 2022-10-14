@@ -34,9 +34,19 @@
         <li class="nav-item my-2">
           <?= isset($_SESSION['username']) ? '<span class="badge bg-primary"> Utilisateur connecté : ' . $_SESSION['username'] . '</span>' : '' ?> 
         </li>
+        <li class="nav-item my-2">
+        <?php if(count($users)) : ?>
+        <span class="badge bg-primary" style="margin-left: .5rem;">
+          <?= count($users) > 1 ? count($users) . ' utilisateurs enregistré ' : count($users) . ' utilisateur enregistré ' ?>  
+        </span>
+      <?php endif; ?>
+        </li>
       </ul>
+
+   
+      
       <form class="d-flex" method="GET">
-        <input class="form-control me-2" name="searchInputValue" type="search" placeholder="Recherche" aria-label="Search">
+        <input class="form-control me-2 ml-2" name="searchInputValue" type="search" placeholder="Recherche" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Chercher</button>
       </form>
     </section>

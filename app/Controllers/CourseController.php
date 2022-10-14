@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 use App\Models\Course;
+use App\Models\User;
 use App\Utils\SearchUtils;
 use App\Utils\DateUtils;
 use App\Utils\UrlValue;
 use App\Utils\Redirect;
 use App\Utils\Upload;
+use PDO;
 
 class CourseController extends CoreController
 {   
@@ -16,21 +18,38 @@ class CourseController extends CoreController
      */
     public function showCourses()
     {   
-        $courses = Course::findAll();
+
+        $courses_array = Course::findAll('course', null, 'fetchAll', PDO::FETCH_ASSOC);
+        foreach($courses_array as $course_array)
+        {     
+            $is_published = $course_array['is_published'];
+            if ($is_published == 1){
+                $result[] = $course_array;
+            }
+        }
+
+        $Lastcourse = Course::findAllWithLimit('course', Course::class, 'DESC', 1);
+        //dump($Lastcourse);
+
+        $courses = Course::findAllPublishedCourses();
 
         $input_value = $_GET['searchInputValue'] ?? null;
 
         if (isset($input_value)) {
             
-            $coursesArray = Course::findAllCoursesAndReturnASSOC();
+            $coursesArray = Course::findAllPublishedCourseForSearch();
             $results = SearchUtils::findInJson($coursesArray, $input_value);
             //reset $courses if results in search
             $courses = null;
         }
-        
+
+        dump($courses);
+
         $this->show('home', [
             'courses' => $courses,
             'results' => $results ?? null,
+            'result' => $result ?? null,
+            'users' => $users ?? null,
         ]);
     }
 
@@ -57,7 +76,7 @@ class CourseController extends CoreController
 
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
-        $courses = Course::findAll();
+        $courses = Course::findAllPublishedCourses();
         
         $this->show('form', ['courses' => $courses, 'course' => $course]);
     }
@@ -154,7 +173,7 @@ class CourseController extends CoreController
         
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
-        $courses = Course::findAll();
+        $courses = Course::findAllPublishedCourses();
 
         $this->show('form', ['courses' => $courses, 'course' => $course]);
 

@@ -6,20 +6,20 @@ use App\Models\User;
 use App\Utils\Database;
 use PDO;
 
-class UserRepository
+class UserRepository extends Query
 {
 
     /**
      * find All Users from Database
      * @return array[]
      */
-    static function findAll()
+    static function findAllUser()
     {
         $pdo = Database::getPDO();
         
         $sql = 'SELECT * FROM `user`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\User');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, User::class);
         
         return $results;
     }
