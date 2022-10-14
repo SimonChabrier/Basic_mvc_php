@@ -61,6 +61,12 @@ class Course extends CourseRepository
     protected bool $is_published;
 
     /**
+     * @var string
+     * not null
+     */
+    protected $program_items = [];
+ 
+    /**
      * Get the value of id
      */
     public function getId():int
@@ -265,6 +271,30 @@ class Course extends CourseRepository
     public function setIs_published(bool $is_published)
     {
         $this->is_published = $is_published;
+
+        return $this;
+    }
+
+    /**
+     * Get not null
+     *
+     * @return  string
+     */ 
+    public function getProgram_items()
+    {
+        return $this->program_items;
+    }
+
+    /**
+     * Set not null
+     *
+     * @param  string  $program_items  not null
+     *
+     * @return  self
+     */ 
+    public function setProgram_items(string $program_items)
+    {
+        $this->program_items = $program_items;
 
         return $this;
     }

@@ -35,8 +35,8 @@
             <label for="description" class="mt-2">Description</label>
               <textarea class="form-control" rows="5" name="description" id="description" placeholder=""><?= $course === false ? '' : $course->getDescription() ?></textarea>
 
-            <!-- <label for="program" class="mt-2">Le programme</label>
-              <textarea class="form-control" rows="5" id="program"></textarea> -->
+            <label for="program" class="mt-2">Le programme</label>
+              <textarea class="form-control" name="program_items" rows="5" id="program"></textarea>
 
             <label for="duration" class="mt-2">Nombre d'heures</label>
               <input type="number" name="duration" id="duration" class="form-control" placeholder="" value="<?= $course === false ? '' : $course->getDuration() ?>">

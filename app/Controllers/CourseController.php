@@ -94,7 +94,8 @@ class CourseController extends CoreController
         $picture = filter_input(INPUT_POST, 'picture');
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
         $is_published = filter_input(INPUT_POST, 'is_published', FILTER_VALIDATE_BOOLEAN);
-
+        $program_items = filter_input(INPUT_POST, 'program_items', FILTER_SANITIZE_SPECIAL_CHARS);
+      
         $course = new Course();
 
         $course->setTitle($_POST['title'])
@@ -103,6 +104,15 @@ class CourseController extends CoreController
         ->setShort_description($_POST['short_description'])
         ->setDescription($_POST['description'])
         ->setIs_published($_POST['published']);
+
+        
+        $data = htmlspecialchars($_POST['program_items']);
+        foreach (preg_split('/\n|\r\n?/', $data) as $line) {
+            $array[] = $line;   
+        };
+        $array = json_encode($array);
+        $course->setProgram_items($array);
+        
 
         //TODO ajouter les champs manquant ici et dans le model en propriétés et les décommenter dans le formulaire
 

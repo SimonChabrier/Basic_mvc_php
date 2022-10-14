@@ -121,8 +121,8 @@ class CourseRepository extends Query
         $pdo = Database::getPDO();
         
         $sql = '
-        INSERT INTO `course` (`title`, `price`, `duration`, `picture`, `short_description`, `description`, `is_published`, `user_id`)
-        VALUES (:title, :price, :duration, :picture, :short_description , :description , :is_published, :user_id);
+        INSERT INTO `course` (`title`, `price`, `duration`, `picture`, `short_description`, `description`, `is_published`, `user_id`, `program_items`)
+        VALUES (:title, :price, :duration, :picture, :short_description , :description , :is_published, :user_id, :program_items);
         ';
         
         $pdoStatement = $pdo->prepare($sql);
@@ -135,6 +135,8 @@ class CourseRepository extends Query
         $pdoStatement->bindValue(':description', $this->description, PDO::PARAM_STR);
         $pdoStatement->bindValue(':is_published', $this->is_published, PDO::PARAM_BOOL);
         $pdoStatement->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
+        $pdoStatement->bindValue(':program_items', $this->program_items, PDO::PARAM_STR);
+
         $pdoStatement->execute();
         
         $insertedRows = $pdoStatement->rowCount();
