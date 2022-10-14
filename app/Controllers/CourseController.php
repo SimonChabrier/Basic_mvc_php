@@ -62,8 +62,12 @@ class CourseController extends CoreController
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
         $date = DateUtils::compareDate($course->getCreated_at());
+        //get the program items of the course
+        $program_items = $course->getProgram_Items();
+        //convert the json_encoded program items to an associative array
+        $program = json_decode($program_items); 
 
-        $this->show('cours', ['course' => $course, 'date' => $date]);
+        $this->show('cours', ['course' => $course, 'program' => $program, 'date' => $date]);
     }
 
     /**

@@ -26,13 +26,11 @@
 <!-- table -->
   <section class="row">
       <div class="col-sm-12 col-lg-6 mb-4">
-        <h2>Le Programme</h2>
+        <h2>Le Programme</h2>    
         <ol>
-          <li>List Item</li>
-          <li>List Item</li>
-          <li>List Item</li>
-          <li>List Item</li>
-          <li>List Item</li>
+        <?php foreach ($program as $program_item) : ?>  
+          <li><?= $program_item ?></li>
+          <?php endforeach; ?>
         </ol>
       </div>
   </section>
