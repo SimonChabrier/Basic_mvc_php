@@ -92,6 +92,26 @@ class CourseRepository extends Query
         return $course;
     }
     
+    static function findUserPublishedCourses()
+    {
+        $pdo = Database::getPDO();
+        
+        $sql = '
+        SELECT *
+        FROM course
+        INNER JOIN user ON course.user_id = user.id
+        WHERE user.id = :id
+        ';
+        $pdoStatement = $pdo->prepare($sql);
+        if(isset( $_SESSION['id'])){
+            $pdoStatement->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
+            $pdoStatement->execute();
+            $course = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Course::class);
+            
+            return $course;
+        } 
+    }
+
     /**
     * insert new Course in Database
     * @return bool

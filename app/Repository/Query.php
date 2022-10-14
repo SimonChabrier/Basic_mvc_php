@@ -14,11 +14,11 @@ class Query
     * @return array[]
     */
 
-    static function findAll($table, $class, $fetchMethod, $fetchMode)
+    static function dynamicFindAll($table, $class, $fetchMethod, $fetchMode)
     {
         $pdo = Database::getPDO();
         
-        $sql = "SELECT * FROM $table";
+        $sql = 'SELECT * FROM ' . $table;
         $pdoStatement = $pdo->query($sql);
 
         if ($class != null){
@@ -39,7 +39,7 @@ class Query
     * @return array[]
     */
 
-    static function findAllWithLimit($table, $class , $order, $limit)
+    static function dynamicFindAllWithLimit($table, $class , $order, $limit)
     {
         $pdo = Database::getPDO(); 
         $sql = 'SELECT * FROM ' . $table . ' ORDER BY created_at ' . $order . ' LIMIT ' . $limit;

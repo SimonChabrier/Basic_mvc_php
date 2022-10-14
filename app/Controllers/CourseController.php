@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 use App\Models\Course;
-use App\Models\User;
 use App\Utils\SearchUtils;
 use App\Utils\DateUtils;
 use App\Utils\UrlValue;
@@ -19,17 +18,21 @@ class CourseController extends CoreController
     public function showCourses()
     {   
 
-        $courses_array = Course::findAll('course', null, 'fetchAll', PDO::FETCH_ASSOC);
+        $courses_array = Course::dynamicFindAll('course', null, 'fetchAll', PDO::FETCH_ASSOC);
         foreach($courses_array as $course_array)
         {     
             $is_published = $course_array['is_published'];
             if ($is_published == 1){
                 $result[] = $course_array;
+                //dump($result);
             }
         }
 
-        $Lastcourse = Course::findAllWithLimit('course', Course::class, 'DESC', 1);
-        //dump($Lastcourse);
+        $last_course = Course::dynamicFindAllWithLimit('course', Course::class, 'DESC', 1);
+        //dump($last_course);
+
+        $user_publication = Course::findUserPublishedCourses();
+        dump($user_publication);
 
         $courses = Course::findAllPublishedCourses();
 
@@ -38,17 +41,14 @@ class CourseController extends CoreController
         if (isset($input_value)) {
             
             $coursesArray = Course::findAllPublishedCourseForSearch();
-            $results = SearchUtils::findInJson($coursesArray, $input_value);
+            $search_results = SearchUtils::findInJson($coursesArray, $input_value);
             //reset $courses if results in search
             $courses = null;
         }
 
-        dump($courses);
-
         $this->show('home', [
             'courses' => $courses,
-            'results' => $results ?? null,
-            'result' => $result ?? null,
+            'search_results' => $search_results ?? null,
             'users' => $users ?? null,
         ]);
     }

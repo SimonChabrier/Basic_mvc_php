@@ -31,20 +31,20 @@
 
 <div class="container mt-2">
     <section class="row">
-        <?php if ($results == null && isset($_GET['searchInputValue'])): ?>
+        <?php if ($search_results == null && isset($_GET['searchInputValue'])): ?>
             <div class="alert alert-danger text-center" role="alert">
                 Aucun résultat pour votre recherche
             </div>
         <?php endif ?>
 
-        <?php if ($results >= 1): ?>
+        <?php if ($search_results >= 1): ?>
             <div class="alert alert-success text-center" role="alert">
-                <?= count($results) > 1 ? $value = count($results) . ' résultats' : $value = count($results) . ' résultat' ?>  
+                <?= count($search_results) > 1 ? $value = count($search_results) . ' résultats' : $value = count($search_results) . ' résultat' ?>  
             </div>
         <?php endif ?>      
 
-        <?php if (is_array($results)): ?>
-            <?php foreach ($results as $result) : ?>
+        <?php if (is_array($search_results)): ?>
+            <?php foreach ($search_results as $result) : ?>
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card mb-4">
                     <a href="<?= $router->generate('course-id', ['id' => $result['id']]) ?>">
