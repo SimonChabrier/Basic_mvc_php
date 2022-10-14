@@ -28,9 +28,13 @@
       <div class="col-sm-12 col-lg-6 mb-4">
         <h2>Le Programme</h2>    
         <ol>
-        <?php foreach ($program as $program_item) : ?>  
-          <li><?= $program_item ?></li>
+          <?php if($items_array): ?>
+          <?php foreach ($items_array as $program_item) : ?>  
+            <li><?= $program_item ?></li>
           <?php endforeach; ?>
+          <?php else: ?>
+            <li>Pas de valeur dans la base de données</li>
+          <?php endif; ?>
         </ol>
       </div>
   </section>
@@ -40,16 +44,16 @@
         <table class="table table-striped">
           <tbody>
             <tr>
-              <td>Dates</td>
-              <td>12/12/22</td>
+              <td>Date</td>
+              <td><?= $course->getDate() == null ? 'non renseigné' : $course->getDate() ?></td>
             </tr>
             <tr>
-              <td>Votre profil</td>
+              <td>Enseignant</td>
               <td>Pierre C</td>
             </tr>
             <tr>
               <td>Durée</td>
-              <td>70h</td>
+              <td><?= $course->getDuration() == null ? 'non renseigné': $course->getDuration() . ' h' ?></td>
             </tr>
             <tr>
               <td>Modalité</td>

@@ -65,6 +65,11 @@ class Course extends CourseRepository
      * not null
      */
     protected $program_items = [];
+
+    /**
+     * @var string
+     */
+    protected $date;
  
     /**
      * Get the value of id
@@ -295,6 +300,30 @@ class Course extends CourseRepository
     public function setProgram_items(string $program_items)
     {
         $this->program_items = $program_items;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of date
+     *
+     * @return  string
+     */ 
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set the value of date
+     *
+     * @param  string  $date
+     *
+     * @return  self
+     */ 
+    public function setDate(string $date)
+    {
+        $this->date = $date;
 
         return $this;
     }

@@ -1,7 +1,9 @@
 <?php 
 //dump(empty($course));
 // dump($course);
-//dump($errors);
+
+
+
 ?>
 
 <div class="container mt-2">
@@ -36,7 +38,7 @@
               <textarea class="form-control" rows="5" name="description" id="description" placeholder=""><?= $course === false ? '' : $course->getDescription() ?></textarea>
 
             <label for="program" class="mt-2">Le programme</label>
-              <textarea class="form-control" name="program_items" rows="5" id="program"></textarea>
+              <textarea class="form-control" name="program_items" id ="program_items" rows="5" id="program"></textarea>
 
             <label for="duration" class="mt-2">Nombre d'heures</label>
               <input type="number" name="duration" id="duration" class="form-control" placeholder="" value="<?= $course === false ? '' : $course->getDuration() ?>">
@@ -44,17 +46,18 @@
             <label for="price" class="mt-2">Tarif</label>
               <input type="number" name="price" id="price" class="form-control" placeholder="" value="<?= $course === false ? '' : $course->getPrice() ?>">
 
-            <!-- <label for="time" class="mt-2">Date</label>
-              <input type="date" id="date" class="form-control">
-
+           <label for="time" class="mt-2">Date</label>
+              <input type="date" name="date" id="date" class="form-control">
+            
             <label for="teacher" class="mt-2">Professeur</label>
-              <select type="choice" id="choice teacher" class="form-control">
-                <option value="choiceinfo" disable>Choisir un professeur</option>
-                <option value="prof1">Prof 1</option>
-                <option value="prof2">Prof 2</option>
-                <option value="prof3">Prof 3</option>
-              </select>
 
+              <select type="choice" id="choice teacher" class="form-control">
+                  <option value="choiceinfo" disable>Choisir un professeur</option>
+                  <?php foreach ($teachers as $teacher) : ?>
+                  <option value="<?= $teacher->getId() ?>"> <?= $teacher->getName() ?> </option>
+                <?php endforeach; ?>
+              </select>
+<!-- 
             <label for="teacher" class="mt-2">Modalité</label>
               <select type="choice" id="modality" class="form-control">
                 <option value="choiceinfo" disable>Choisir la modalité</option>

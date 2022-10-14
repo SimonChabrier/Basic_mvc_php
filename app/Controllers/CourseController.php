@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\Course;
+use App\Models\Teacher;
 use App\Utils\SearchUtils;
 use App\Utils\DateUtils;
 use App\Utils\UrlValue;
@@ -61,13 +62,13 @@ class CourseController extends CoreController
     {   
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
-        $date = DateUtils::compareDate($course->getCreated_at());
-        //get the program items of the course
-        $program_items = $course->getProgram_Items();
-        //convert the json_encoded program items to an associative array
-        $program = json_decode($program_items); 
 
-        $this->show('cours', ['course' => $course, 'program' => $program, 'date' => $date]);
+        $items_string = $course->getProgram_Items();
+        $items_array = json_decode($items_string); 
+
+        $date = DateUtils::compareDate($course->getCreated_at());
+
+        $this->show('cours', ['course' => $course, 'items_array' => $items_array, 'date' => $date]);
     }
 
     /**
@@ -81,8 +82,9 @@ class CourseController extends CoreController
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
         $courses = Course::findAllPublishedCourses();
-        
-        $this->show('form', ['courses' => $courses, 'course' => $course]);
+        $teachers = Teacher::findAllTeacher();
+       
+        $this->show('form', ['course' => $course, 'courses' => $courses, 'teachers' => $teachers]);
     }
 
     /**
@@ -99,15 +101,16 @@ class CourseController extends CoreController
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
         $is_published = filter_input(INPUT_POST, 'is_published', FILTER_VALIDATE_BOOLEAN);
         $program_items = filter_input(INPUT_POST, 'program_items', FILTER_SANITIZE_SPECIAL_CHARS);
-      
+        $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
         $course = new Course();
-
+        
         $course->setTitle($_POST['title'])
         ->setPrice($_POST['price'])
         ->setDuration($_POST['duration'])
         ->setShort_description($_POST['short_description'])
         ->setDescription($_POST['description'])
-        ->setIs_published($_POST['published']);
+        ->setIs_published($_POST['published'])
+        ->setDate($date = DateUtils::formatDate($date));
 
 
         $data = htmlspecialchars($_POST['program_items']);
