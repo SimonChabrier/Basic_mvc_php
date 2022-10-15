@@ -148,8 +148,9 @@ class CourseController extends CoreController
                     'errors' => $errors,
                     'course' => $course,
                 ]);
-                return;
-            
+                //ajouter return pour ne pas executer le reste du code et ne pas ajouter le cours dans la base de données
+                //tant qu'il y a des erreurs dans le formulaire.
+                return; 
             }
         }
 
