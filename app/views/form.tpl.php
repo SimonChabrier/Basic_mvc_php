@@ -1,6 +1,5 @@
 <?php 
-//dump(empty($course));
-//dump($course);
+
 ?>
 
 <div class="container mt-2">
@@ -44,10 +43,11 @@
               <input type="number" name="price" id="price" class="form-control" placeholder="" value="<?= empty($course) ? null : $course->getPrice() ?>">
 
            <label for="time" class="mt-2">Date</label>
-              <input type="date" name="date" id="date" class="form-control">
-            
+              
+              <input type="date" name="date" id="datePicker" value="" class="form-control datepicker" data-value="2019/09/20" placeholder="Choisir une date">
+              <script> document.getElementById('datePicker').valueAsDate = new Date('<?php echo $french_date ?>'); </script>
+          
             <label for="teacher" class="mt-2">Professeur</label>
-
               <select type="choice" name="teacher_id" id="choice teacher" class="form-control">
                   <option value="choiceinfo" disable>Choisir un professeur</option>
                   <?php foreach ($teachers as $teacher) : ?>
@@ -55,7 +55,7 @@
                 <?php endforeach; ?>
               </select>
 
-                  
+      
 <!-- 
             <label for="teacher" class="mt-2">Modalité</label>
               <select type="choice" id="modality" class="form-control">
@@ -94,5 +94,6 @@
       </div>
   </section>
 </div>
+
 </body>
 </html>

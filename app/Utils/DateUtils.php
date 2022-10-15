@@ -2,11 +2,13 @@
 
 namespace App\Utils;
 
+use Date;
 use DateTime;
 use DateTimeZone;
 
 class DateUtils
 {   
+    
 
     public static function dateToFrench($date, $format) 
     {
@@ -29,6 +31,8 @@ class DateUtils
         return $french_date;
     }
 
+
+
     /**
      * Return a date in french format
      * @param string $date
@@ -37,7 +41,7 @@ class DateUtils
     public static function formatDateTime($date)
     {
         $date = new \DateTime($date);
-        $date = $date->format('d/m/Y H:i');
+        $date = $date->format('d/m/Y');
         return $date;
     }
 

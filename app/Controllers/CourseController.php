@@ -2,14 +2,15 @@
 
 namespace App\Controllers;
 
+use PDO;
+use DateTime;
+use App\Utils\Upload;
 use App\Models\Course;
 use App\Models\Teacher;
-use App\Utils\SearchUtils;
-use App\Utils\DateUtils;
-use App\Utils\UrlValue;
 use App\Utils\Redirect;
-use App\Utils\Upload;
-use PDO;
+use App\Utils\UrlValue;
+use App\Utils\DateUtils;
+use App\Utils\SearchUtils;
 
 class CourseController extends CoreController
 {   
@@ -173,6 +174,60 @@ class CourseController extends CoreController
         //get the course to update
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
+  
+
+        $french_date = $course->getDate();
+        dump($french_date);
+        $data = explode(' ', $french_date);
+        $day = $data[0];
+        $dayNumber = $data[1];
+        $month = $data[2];
+        $year = $data[3];
+
+        switch($month) {
+            case 
+            ('janvier'):
+                $month = '1';
+                break;
+            case('février'):
+                $month = '2';
+                break;
+            case('mars'):
+                $month = '3';
+                break;
+            case('avril'):
+                $month = '4';
+                break;
+            case('mai'):
+                $month = '5';
+                break;
+            case('juin'):
+                $month = '6';
+                break;
+            case('juillet'):
+                $month = '7';
+                break;
+            case('août'):
+                $month = '8';
+                break;
+            case('septembre'):
+                $month = '9';
+                break;
+            case('octobre'):
+                $month = '10';
+                break;
+            case('novembre'):
+                $month = '11';
+                break;
+            case('décembre'):
+                $month = '12';
+                break;
+        };
+
+        $date = new DateTime($dayNumber.'-'.$month.'-'.$year);
+        $french_date = $date->format('Y-m-d');
+
+
         //set teacher choice list
         $teachers = Teacher::dynamicFindAll('teacher', Teacher::class, 'fetchAll', PDO::FETCH_CLASS);
         
@@ -244,7 +299,7 @@ class CourseController extends CoreController
         }
 
          //display the form
-         $this->show('form', compact('course','teachers'));
+         $this->show('form', compact('course','teachers', 'french_date'));
     }
 
     /**
