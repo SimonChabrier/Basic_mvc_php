@@ -17,7 +17,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= $router->generate('main-form') ?>">Créer un cours</a>
+          <a class="nav-link" href="<?= $router->generate('course-form') ?>">Créer un cours</a>
         </li>
         <li class="nav-item">
         <?php if (isset($_SESSION['username'])) : ?>

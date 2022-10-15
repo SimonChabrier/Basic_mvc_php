@@ -39,7 +39,7 @@ $router->addRoutes(
         ['GET', '/cours/update/[i:id]', 'App\Controllers\CourseController::courseUpdate', 'update-course'],
         ['POST', '/cours/update/[i:id]', 'App\Controllers\CourseController::courseUpdate', 'post-course'],
         ['GET', '/cours/delete/[i:id]', 'App\Controllers\CourseController::courseDelete', 'delete-course'],
-        ['GET', '/form', 'App\Controllers\CourseController::showForm', 'main-form'],
+        ['GET', '/form', 'App\Controllers\CourseController::courseCreate', 'course-form'],
         ['POST', '/form', 'App\Controllers\CourseController::courseCreate', 'create-course'],
         ['GET', '/register', 'App\Controllers\UserController::register', 'user-register'],
         ['POST', '/register', 'App\Controllers\UserController::registration', 'user-registeration'],

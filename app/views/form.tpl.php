@@ -1,6 +1,5 @@
 <?php 
-//dump(empty($course));
-//dump($errors);
+
 ?>
 
 <div class="container mt-2">
@@ -23,37 +22,44 @@
           <div class="form-group">
       
             <label for="title">Titre</label>
-              <input type="input" name="title" id="title" class="form-control" placeholder="" maxlength="150" value="<?= $course === false ? '' : $course->getTitle()  ?>">
+              <input type="input" name="title" id="title" class="form-control" placeholder="" maxlength="150" value="<?= empty($course) ? null : $course->getTitle()  ?>">
 
             <label for="picture" class="mt-2">Image</label>
               <input type="file" name="picture" id="picture" accept="image/png, image/gif, image/jpeg" class="form-control">
 
             <label for="description" class="mt-2">Description courte</label>
-              <input type="input" name="short_description"  id="shortDescription" class="form-control"  placeholder="" value="<?= $course === false ? '' : $course->getShort_description() ?>">
+              <input type="input" name="short_description"  id="shortDescription" class="form-control"  placeholder="" value="<?= empty($course) ? null : $course->getShort_description() ?>">
 
             <label for="description" class="mt-2">Description</label>
-              <textarea class="form-control" rows="5" name="description" id="description" placeholder=""><?= $course === false ? '' : $course->getDescription() ?></textarea>
+              <textarea class="form-control" rows="5" name="description" id="description" placeholder=""><?= empty($course) ? null : $course->getDescription() ?></textarea>
 
             <label for="program" class="mt-2">Le programme</label>
               <textarea class="form-control" name="program_items" id ="program_items" rows="5" id="program"></textarea>
 
             <label for="duration" class="mt-2">Nombre d'heures</label>
-              <input type="number" name="duration" id="duration" class="form-control" placeholder="" value="<?= $course === false ? '' : $course->getDuration() ?>">
+              <input type="number" name="duration" id="duration" class="form-control" placeholder="" value="<?= empty($course) ? null : $course->getDuration() ?>">
 
             <label for="price" class="mt-2">Tarif</label>
-              <input type="number" name="price" id="price" class="form-control" placeholder="" value="<?= $course === false ? '' : $course->getPrice() ?>">
+              <input type="number" name="price" id="price" class="form-control" placeholder="" value="<?= empty($course) ? null : $course->getPrice() ?>">
 
            <label for="time" class="mt-2">Date</label>
-              <input type="date" name="date" id="date" class="form-control">
-            
-            <label for="teacher" class="mt-2">Professeur</label>
+              <input type="date" name="date" id="datePicker" value="" class="form-control datepicker" data-value="2019/09/20" placeholder="Choisir une date">
+              
+                <?php if (empty($date)) : ?>
+                  <script> document.getElementById('datePicker').valueAsDate = new Date(); </script>
+                <?php else : ?>
+                  <script> document.getElementById('datePicker').valueAsDate = new Date('<?php echo $date ?>'); </script>
+                <?php endif; ?>
 
+            <label for="teacher" class="mt-2">Professeur</label>
               <select type="choice" name="teacher_id" id="choice teacher" class="form-control">
                   <option value="choiceinfo" disable>Choisir un professeur</option>
                   <?php foreach ($teachers as $teacher) : ?>
-                  <option value="<?= $teacher->getId() ?>"> <?= $teacher->getName() ?> </option>
+                    <?=  $teacher->getId() == get_object_vars($course)['teacher_id'] ? '<option value="' . $teacher->getId() . '" selected>'  . $teacher->getName() . '</option>' :  '<option value="' . $teacher->getId() . '">' . $teacher->getName() . '</option>' ?>
                 <?php endforeach; ?>
               </select>
+
+      
 <!-- 
             <label for="teacher" class="mt-2">Modalité</label>
               <select type="choice" id="modality" class="form-control">
@@ -73,24 +79,25 @@
           </div> -->
 
           <div class="form-check mt-2">
-          <input class="form-check-input" type="radio" value="true" name="published" id="radio1" <?= $course === false || $course->getIs_published() === true   ? 'checked' : '' ?>>
+          <input class="form-check-input" type="radio" value="true" name="published" id="radio1" <?= empty($course) || $course->getIs_published() === true  ? 'checked' : '' ?>>
             <label class="form-check-label" for="radio1">
               Publié
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" value="false" name="published" id="radio2" <?= $course === false || $course->getIs_published() === false ? 'checked' : '' ?>>
+            <input class="form-check-input" type="radio" value="false" name="published" id="radio2" <?= empty($course) || $course->getIs_published() === false ? 'checked' : '' ?>>
             <label class="form-check-label" for="radio2">
               En attente
             </label>
         </div>
         
-          <button type="submit" value="upload" name="publishCourseBtn" class="btn btn-primary btn-sm mt-2"><?= $course === false ?  'Créer' : 'Mettre à jour'  ?></button>  
+          <button type="submit" value="upload" name="publishCourseBtn" class="btn btn-primary btn-sm mt-2"><?= empty($course) ?  'Créer' : 'Mettre à jour'  ?></button>  
           
         <!-- get user last location -->
         <input type="hidden" name="lastLocation" value="<?= $_SERVER['HTTP_REFERER'] ?>">
       </div>
   </section>
 </div>
+
 </body>
 </html>

@@ -2,11 +2,13 @@
 
 namespace App\Utils;
 
+use Date;
 use DateTime;
 use DateTimeZone;
 
 class DateUtils
 {   
+
 
     public static function dateToFrench($date, $format) 
     {
@@ -29,6 +31,8 @@ class DateUtils
         return $french_date;
     }
 
+
+
     /**
      * Return a date in french format
      * @param string $date
@@ -37,7 +41,7 @@ class DateUtils
     public static function formatDateTime($date)
     {
         $date = new \DateTime($date);
-        $date = $date->format('d/m/Y H:i');
+        $date = $date->format('d/m/Y');
         return $date;
     }
 
@@ -62,4 +66,59 @@ class DateUtils
         return $interval->format('Publié aujourd\'hui');
     }
 
+    /**
+     * Return a date in french format
+     * @param string $date
+     * @return string
+     */
+    public static function convertDateInValidDatePickerValue($full_string_date)
+    {
+        $data = explode(' ', $full_string_date);
+        $dayNumber = $data[1];
+        $month = $data[2];
+        $year = $data[3];
+
+        switch($month) {
+            case 
+            ('janvier'):
+                $month = '1';
+                break;
+            case('février'):
+                $month = '2';
+                break;
+            case('mars'):
+                $month = '3';
+                break;
+            case('avril'):
+                $month = '4';
+                break;
+            case('mai'):
+                $month = '5';
+                break;
+            case('juin'):
+                $month = '6';
+                break;
+            case('juillet'):
+                $month = '7';
+                break;
+            case('août'):
+                $month = '8';
+                break;
+            case('septembre'):
+                $month = '9';
+                break;
+            case('octobre'):
+                $month = '10';
+                break;
+            case('novembre'):
+                $month = '11';
+                break;
+            case('décembre'):
+                $month = '12';
+                break;
+        };
+
+        $date = new DateTime($dayNumber.'-'.$month.'-'.$year);
+        return $date = $date->format('Y-m-d');
+    }
 }

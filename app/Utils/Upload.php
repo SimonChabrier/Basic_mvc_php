@@ -32,7 +32,6 @@ class Upload
 
             if (!empty($errors)) {
                 return $errors;
-                //$object->setPicture('default.jpg');
             } else {
                 if (in_array($picture_actual_ext, $allowed)) {
                     if ($picture_error === 0) {
