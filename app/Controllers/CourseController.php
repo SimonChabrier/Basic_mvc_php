@@ -173,7 +173,7 @@ class CourseController extends CoreController
      * Process the form to update a course
      * @return void
      */
-    //TODO gérer la mise à jour de l'image et des items du programme
+    //TODO gérer la mise à jour de l'image et des items du programme et la liste des profs
     public function courseUpdate()
     {   
         $redirect = NULL;
