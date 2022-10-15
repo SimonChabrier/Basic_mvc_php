@@ -12,30 +12,41 @@ class Upload
      */
     static function processUploadPicture(array $picture, object $object)
     {   
-
-        if ($_FILES['picture']['error'] == null) {
-            $picture = $_FILES['picture']['tmp_name'];
-            $name = $_FILES['picture']['name'];
-            $name  = uniqid() . '.jpeg';
-        } else {
-            $name = 'default.jpg';
-        }
-
-        if($_FILES['picture']['size'] > 500000){
-            throw new \Exception('Le fichier est trop gros');
-        };
+        $picture_name = $picture['name'];
+        $picture_tmp_name = $picture['tmp_name'];
+        $picture_size = $picture['size'];
+        $picture_error = $picture['error'];
+        $picture_type = $picture['type'];
+        $picture_width = getimagesize($picture_tmp_name);
+        $picture_width = $picture_width[0];
+        $picture_height = getimagesize($picture_tmp_name);
+        $picture_height = $picture_height[1];
+        $picture_ext = explode('.', $picture_name);
+        $picture_actual_ext = strtolower(end($picture_ext));
+        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         
-        if($_FILES['picture']['error'] > 0){
-            $object->setPicture($name);
-        };
+        if (in_array($picture_actual_ext, $allowed)) {
+            if ($picture_error === 0) {
+                if ($picture_size < 100000 && $picture_width > 400 && $picture_height > 400) {
 
-        $object->setPicture($name);
+                    $picture_new_name = uniqid('', true) . "." . $picture_actual_ext;
+                    $picture_destination = self::ROOT . $picture_new_name;
+                    move_uploaded_file($picture_tmp_name, $picture_destination);
+                    $object->setPicture($picture_new_name);
+                    chmod(self::ROOT . $picture_new_name, 0777);
+                    self::cropPicture($picture_new_name, 400, 400);
 
-        // move file to public assets/images folder
-        move_uploaded_file($picture, self::ROOT . $name);
-        //then set the user rigths on this file
-        chmod(self::ROOT . $name, 0777);
-        self::cropPicture($name, 400, 400);
+                } else {
+                    $object->setPicture('default.jpg');
+                    echo "Le fichier est trop volumineux!";
+                }
+            } else {
+                echo "Il y a eu une erreur dans l'ajout du fichier!";
+            }
+        } else {
+            $object->setPicture('default.jpg');
+            echo "On ne peut pas uploader de fichier de ce type. Il a été remplacé par l'image par défaut!";
+        }
     }
 
     static function cropPicture($file_name, $width, $height)
