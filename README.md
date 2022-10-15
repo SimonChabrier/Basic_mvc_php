@@ -16,3 +16,14 @@ Be careful to have RW rigths on this 'images' directory to be able to upload fil
 ```
 chmod 777 images
 ```
+
+### Utils
+
+- Database
+- Date
+- Redirect
+- Search
+- Token
+- Upload
+- UrlValue
+
