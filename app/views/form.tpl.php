@@ -45,8 +45,13 @@
            <label for="time" class="mt-2">Date</label>
               
               <input type="date" name="date" id="datePicker" value="" class="form-control datepicker" data-value="2019/09/20" placeholder="Choisir une date">
-              <script> document.getElementById('datePicker').valueAsDate = new Date('<?php echo $date  ?>'); </script>
-          
+
+                <?php if (empty($date)) : ?>
+                  <?="<script> document.getElementById('datePicker').valueAsDate = new Date(); </script>" ?>
+                <?php else : ?>
+                  <?= "<script> document.getElementById('datePicker').valueAsDate = new Date('<?= $date ?>'); </script>"?>
+                <?php endif; ?>
+
             <label for="teacher" class="mt-2">Professeur</label>
               <select type="choice" name="teacher_id" id="choice teacher" class="form-control">
                   <option value="choiceinfo" disable>Choisir un professeur</option>

@@ -175,9 +175,7 @@ class CourseController extends CoreController
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
   
-
         $full_string_date = $course->getDate();
-       //passer la méthode de conversion 
         $date = DateUtils::convertDateInValidDatePickerValue($full_string_date);
         //set teacher choice list
         $teachers = Teacher::dynamicFindAll('teacher', Teacher::class, 'fetchAll', PDO::FETCH_CLASS);
