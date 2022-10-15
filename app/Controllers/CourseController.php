@@ -220,8 +220,10 @@ class CourseController extends CoreController
         $course = Course::find($id);
 
         if ($course->delete($id)) {
-            unlink(self::ROOT . $course->getPicture());
+            //unlink picture only if != default.jpg
+            $course->getPicture() != 'default.jpg' ?  unlink(self::ROOT . $course->getPicture()) : false;
             Redirect::redirect('main-home');
+
         } else {
             throw new \Exception('Erreur lors de la suppression');
         } 
