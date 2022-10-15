@@ -43,9 +43,8 @@
               <input type="number" name="price" id="price" class="form-control" placeholder="" value="<?= empty($course) ? null : $course->getPrice() ?>">
 
            <label for="time" class="mt-2">Date</label>
-              
               <input type="date" name="date" id="datePicker" value="" class="form-control datepicker" data-value="2019/09/20" placeholder="Choisir une date">
-                
+              
                 <?php if (empty($date)) : ?>
                   <script> document.getElementById('datePicker').valueAsDate = new Date(); </script>
                 <?php else : ?>
