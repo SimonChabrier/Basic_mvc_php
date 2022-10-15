@@ -171,13 +171,14 @@ class CourseController extends CoreController
     {   
         $redirect = NULL;
         $errors = [];
+        
         //get the course to update
         $id = UrlValue::findUrlLastSegment();
         $course = Course::find($id);
-  
+        //get course date in french format and convert in valid string format to set the date picker value
         $full_string_date = $course->getDate();
         $date = DateUtils::convertDateInValidDatePickerValue($full_string_date);
-        //set teacher choice list
+        //get teachers to hydrat teachers input choices values
         $teachers = Teacher::dynamicFindAll('teacher', Teacher::class, 'fetchAll', PDO::FETCH_CLASS);
         
         //processing form
