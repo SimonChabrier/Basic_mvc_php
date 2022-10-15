@@ -185,10 +185,15 @@ class CourseRepository extends Query
             `title` = :title,
             `price` = :price, 
             `duration` = :duration, 
+            `picture` = :picture,
             `short_description` = :short_description, 
             `description` = :description, 
-            `is_published` = :is_published
-            WHERE `id` = :id;
+            `is_published` = :is_published,
+            `user_id` = :user_id,
+            `program_items` = :program_items,
+            `date` = :date,
+            `teacher_id` = :teacher_id
+            WHERE id = :id;
         ';
       
         $pdoStatement = $pdo->prepare($sql);
@@ -196,12 +201,16 @@ class CourseRepository extends Query
         $pdoStatement->bindValue(':title', $this->title, PDO::PARAM_STR);
         $pdoStatement->bindValue(':price', $this->price, PDO::PARAM_INT);
         $pdoStatement->bindValue(':duration', $this->duration, PDO::PARAM_INT);
+        $pdoStatement->bindValue(':picture', $this->picture, PDO::PARAM_STR);
         $pdoStatement->bindValue(':short_description', $this->short_description, PDO::PARAM_STR);
         $pdoStatement->bindValue(':description', $this->description, PDO::PARAM_STR);
         $pdoStatement->bindValue(':is_published', $this->is_published, PDO::PARAM_BOOL);
-        $pdoStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
-        
-        
+        $pdoStatement->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
+        $pdoStatement->bindValue(':program_items', $this->program_items, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':date', $this->date, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':teacher_id', $_POST['teacher_id'], PDO::PARAM_INT);
+        $pdoStatement->bindValue(':id', $id, PDO::PARAM_INT);
+   
         $pdoStatement->execute();
         
         $updatedRows = $pdoStatement->rowCount();
