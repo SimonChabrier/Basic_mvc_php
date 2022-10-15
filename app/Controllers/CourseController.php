@@ -141,7 +141,16 @@ class CourseController extends CoreController
         
         //process image
         if($_FILES['picture']){   
-            Upload::processUploadPicture($_FILES['picture'], $course);
+        
+            Upload::processUploadPicture($_FILES['picture'], $course) == null ? null : $errors = Upload::processUploadPicture($_FILES['picture'], $course);
+            if (!empty($errors)) {      
+                $this->show('form', [
+                    'errors' => $errors,
+                    'course' => $course,
+                ]);
+                return;
+            
+            }
         }
 
         if ($course->insert()){   
@@ -151,11 +160,12 @@ class CourseController extends CoreController
         } 
 
         else {
+            $this->show('form', compact('errors'));
             echo 'Il y a une erreur';
         }
         
         //display the form
-        $this->show('form', []);
+        $this->show('form',[]);
     }
     
     /**
