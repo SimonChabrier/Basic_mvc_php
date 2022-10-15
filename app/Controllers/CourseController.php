@@ -107,55 +107,65 @@ class CourseController extends CoreController
      */
     public function courseCreate()
     {   
-        //process post data
-        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
-        $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT);
-        $duration = filter_input(INPUT_POST, 'duration', FILTER_VALIDATE_INT);
-        $short_description = filter_input(INPUT_POST, 'short_description', FILTER_SANITIZE_SPECIAL_CHARS);
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
-        $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
-        $program_items = $_POST['program_items'];
-        $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
-        
-        //start to create a new course
-        $course = new Course();
-        $course->setTitle($title)
-        ->setPrice($price )
-        ->setDuration($duration)
-        ->setShort_description($short_description)
-        ->setDescription($description)
-        ->setIs_published($is_published)
-        ->setDate($date = DateUtils::formatDateInFrench($date));
+        if (isset($_POST["publishCourseBtn"])) {
+            //process post data
+            $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
+            $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT);
+            $duration = filter_input(INPUT_POST, 'duration', FILTER_VALIDATE_INT);
+            $short_description = filter_input(INPUT_POST, 'short_description', FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+            $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
+            $program_items = $_POST['program_items'];
+            $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        //process program items and clean value with htmlspecialchars
-        $data = htmlspecialchars($program_items);
+            //start to create a new course
+            $course = new Course();
+            $course->setTitle($title)
+            ->setPrice($price)
+            ->setDuration($duration)
+            ->setShort_description($short_description)
+            ->setDescription($description)
+            ->setIs_published($is_published)
+            ->setDate($date = DateUtils::formatDateInFrench($date));
 
-        foreach (preg_split('/\n|\r\n?/', $data) as $line) {
-            $array[] = $line; 
-        };
+            //process program items and clean value with htmlspecialchars
+            $data = htmlspecialchars($program_items);
 
-        $array = json_encode($array);
+            foreach (preg_split('/\n|\r\n?/', $data) as $line) {
+                $array[] = $line;
+            };
 
-        //set program items with processed data
-        $course->setProgram_items($array);
-        
-        //process image
-        if($_FILES['picture']){   
-            Upload::processUploadPicture($_FILES['picture'], $course);
+            $array = json_encode($array);
+
+            //set program items with processed data
+            $course->setProgram_items($array);
+
+            //process image
+            if ($_FILES['picture']) {
+                Upload::processUploadPicture($_FILES['picture'], $course) == null ? null : $errors = Upload::processUploadPicture($_FILES['picture'], $course);
+
+                if (!empty($errors)) {
+                    $this->show('form', [
+                        'errors' => $errors,
+                        'course' => $course,
+                    ]);
+                    //ajouter return pour ne pas executer le reste du code et ne pas ajouter le cours dans la base de données
+                    //tant qu'il y a des erreurs dans le formulaire.
+                    return;
+                }
+            }
+
+            if ($course->insert()) {
+                //TODO ajouter un message de succès
+                //TODO rediriger vers le nouveau post créé
+                Redirect::redirect('main-home');
+            } else {
+                $this->show('form', compact('errors'));
+                echo 'Il y a une erreur';
+            }
         }
-
-        if ($course->insert()){   
-            //TODO ajouter un message de succès
-            //TODO rediriger vers le nouveau post créé
-            Redirect::redirect('main-home');
-        } 
-
-        else {
-            echo 'Il y a une erreur';
-        }
-        
         //display the form
-        $this->show('form', []);
+        $this->show('form',[]);
     }
     
     /**
@@ -166,48 +176,81 @@ class CourseController extends CoreController
     {   
         $redirect = NULL;
         $errors = [];
-
+        //get the course to update
+        $id = UrlValue::findUrlLastSegment();
+        $course = Course::find($id);
+        //set teacher choice list
+        $teachers = Teacher::dynamicFindAll('teacher', Teacher::class, 'fetchAll', PDO::FETCH_CLASS);
+        
+        //processing form
         if (isset($_POST["publishCourseBtn"]) && isset($_POST['lastLocation'])) {
             
             $redirect = $_POST['lastLocation'];
-
+            
             $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
             $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT);
             $duration = filter_input(INPUT_POST, 'duration', FILTER_VALIDATE_INT);
             $short_description = filter_input(INPUT_POST, 'short_description', FILTER_SANITIZE_SPECIAL_CHARS);
-            $picture = filter_input(INPUT_POST, 'picture', FILTER_SANITIZE_SPECIAL_CHARS);
             $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
             $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
+            $program_items = $_POST['program_items'];
+            $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
 
+            //get the course by id
             $id = UrlValue::findUrlLastSegment();
             $course = Course::find($id);
 
+            //set the new course values
             $course->setTitle($title)
-            ->setPrice($price)
+            ->setPrice($price )
             ->setDuration($duration)
             ->setShort_description($short_description)
-            ->setPicture($picture)
             ->setDescription($description)
-            ->setIs_published($is_published);
+            ->setIs_published($is_published)
+            ->setDate($date = DateUtils::formatDateInFrench($date));
 
-                if ($course->update($id)) {
-                    //TODO : ajouter un message si modification n'a été apportée
-                    Redirect::redirectLastPageVisited($redirect);
-                } elseif ($course === $course) {
-                    //TODO : ajouter un message si aucune modification n'a été apportée
-                    Redirect::redirectLastPageVisited($redirect);
-                } else {
-                    strlen($short_description) > 255 ? $errors[] = 'La description courte ne doit pas dépasser 255 caractères' : 'erreur inconnue';
-                    $this->show('form', ['errors' => $errors, 'course' => $course]);
+            //process program items and clean value with htmlspecialchars
+            $data = htmlspecialchars($program_items);
+
+            foreach (preg_split('/\n|\r\n?/', $data) as $line) {
+                $array[] = $line; 
+            };
+
+            $array = json_encode($array);
+
+            //set program items with processed data
+            $course->setProgram_items($array);
+
+            //process image
+            if($_FILES['picture']){   
+            
+                Upload::processUploadPicture($_FILES['picture'], $course) == null ? null : $errors = Upload::processUploadPicture($_FILES['picture'], $course);
+                
+                if (!empty($errors)) {   
+                    $this->show('form', [
+                        'errors' => $errors,
+                        'course' => $course,
+                        'teachers' => $teachers
+                    ]);
+                    //ajouter return pour ne pas executer le reste du code et ne pas ajouter le cours dans la base de données
+                    //tant qu'il y a des erreurs dans le formulaire.
+                    return; 
                 }
             }
-        
-        $id = UrlValue::findUrlLastSegment();
-        $course = Course::find($id);
-        $courses = Course::findAllPublishedCourses();
 
-        $this->show('form', compact('course', 'courses'));
+            if ($course->update($id)) {
+                //TODO : ajouter un message si modification n'a été apportée
+                Redirect::redirectLastPageVisited($redirect);
+            } 
 
+            if ($course === $course) {
+                //TODO : ajouter un message si aucune modification n'a été apportée
+                Redirect::redirectLastPageVisited($redirect);
+            }    
+        }
+
+         //display the form
+         $this->show('form', compact('course','teachers'));
     }
 
     /**

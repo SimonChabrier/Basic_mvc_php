@@ -32,8 +32,6 @@ $router = new AltoRouter();
 
 //$router->setBasePath($_SERVER['BASE_URI']);
 
-
-
 $router->addRoutes(
     [
         ['GET', '/', 'App\Controllers\CourseController::showCourses', 'main-home'],

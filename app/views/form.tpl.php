@@ -1,22 +1,19 @@
 <?php 
 //dump(empty($course));
-// dump($course);
-
-
-
+//dump($errors);
 ?>
 
 <div class="container mt-2">
   <section class="row">
       <div class="col-sm-6 col-lg-12 mb-2">
         <h1>Créer un cours</h1>
-        <?php if (isset($errors)) : ?>
-        <div class="alert alert-danger text-center" role="alert">
-            <?php foreach ($errors as $error) : ?>
-                <p><?= $error ?></p>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+        <?php if (!empty($errors)) : ?>
+          <div class="alert alert-danger text-center" role="alert">
+              <?php foreach ($errors as $error) : ?>
+                  <p><?= $error ?></p>
+              <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
       </div>
   </section>
 <!-- form -->
