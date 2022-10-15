@@ -13,16 +13,20 @@ class Upload
     static function processUploadPicture(array $picture, object $object)
     {   
 
-        $picture = $_FILES['picture']['tmp_name'];
-        $name = $_FILES['picture']['name'];
-        $name  = uniqid() . '.jpeg';
+        if ($_FILES['picture']['error'] == null) {
+            $picture = $_FILES['picture']['tmp_name'];
+            $name = $_FILES['picture']['name'];
+            $name  = uniqid() . '.jpeg';
+        } else {
+            $name = 'default.jpg';
+        }
 
         if($_FILES['picture']['size'] > 500000){
             throw new \Exception('Le fichier est trop gros');
         };
         
         if($_FILES['picture']['error'] > 0){
-            throw new \Exception('Erreur lors du transfert de l\'image');
+            $object->setPicture($name);
         };
 
         $object->setPicture($name);
@@ -37,13 +41,13 @@ class Upload
     static function cropPicture($file_name, $width, $height)
     {
         //On récupère la liste des images dans le dossier
-        $all_files = scandir(Upload::ROOT);
+        $all_files = scandir(self::ROOT);
         //On nettoie pour extraire uniquement les noms de fichiers
-        $all_files = array_diff(scandir(Upload::ROOT), array('.', '..'));        
+        $all_files = array_diff(scandir(self::ROOT), array('.', '..'));        
         //On parcourt la liste des images pour trouver celle qui correspond à l'image à redimensionner
         $file_find = array_search($file_name, $all_files);
         // On recrée un fihcier jpeg à partir de la valeur récupérée
-        $file_create = imagecreatefromjpeg(Upload::ROOT . $all_files[$file_find]); 
+        $file_create = imagecreatefromjpeg(self::ROOT . $all_files[$file_find]); 
         // On redimensionne l'image
         $resized_file = imagescale($file_create , $width, -1); 
         // On crope l'image
@@ -51,7 +55,7 @@ class Upload
         // suppression le fond blanc ou noir
         $final_file = imagecropauto($croped_file, IMG_CROP_SIDES);
         // On enregistre la nouvelle image
-        imagejpeg($final_file, Upload::ROOT . $all_files[$file_find]); 
+        imagejpeg($final_file, self::ROOT . $all_files[$file_find]); 
 
     }
 

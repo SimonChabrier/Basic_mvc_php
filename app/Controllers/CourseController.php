@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\Course;
 use App\Models\Teacher;
 use App\Utils\SearchUtils;
@@ -12,9 +13,11 @@ use PDO;
 
 class CourseController extends CoreController
 {   
+    const ROOT = './assets/images/';
+
     /**
      * List all courses
-     * @return void
+     * Home page
      */
     public function showCourses()
     {   
@@ -68,8 +71,8 @@ class CourseController extends CoreController
         $id = get_object_vars($course)['teacher_id'];
         //find course using the int value of $id
         $teacher = Course::findCourseTeacherName($id);
-        //if $teacher = false, set $name to null else get teacher name value from database on this object $teacher
-        $teacher == null ? $name = null : $name = get_object_vars($teacher)['name'];
+        //if $teacher = false, set $teacher_name to null else get teacher name value from database on this object $teacher
+        $teacher == null ? $teacher_name = null : $teacher_name = get_object_vars($teacher)['name'];
 
         //get program items from json
         $items_string = $course->getProgram_Items();
@@ -78,7 +81,7 @@ class CourseController extends CoreController
 
         $date = DateUtils::compareDate($course->getCreated_at());
 
-        $this->show('cours', compact('course', 'items_array', 'date', 'name'));
+        $this->show('cours', compact('course', 'items_array', 'date', 'teacher_name'));
     }
 
     /**
@@ -111,7 +114,7 @@ class CourseController extends CoreController
         $short_description = filter_input(INPUT_POST, 'short_description', FILTER_SANITIZE_SPECIAL_CHARS);
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
         $is_published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_BOOLEAN);
-        $program_items = filter_input(INPUT_POST, 'program_items', FILTER_SANITIZE_SPECIAL_CHARS);
+        $program_items = $_POST['program_items'];
         $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
         
         //start to create a new course
@@ -124,12 +127,15 @@ class CourseController extends CoreController
         ->setIs_published($is_published)
         ->setDate($date = DateUtils::formatDateInFrench($date));
 
-        //process program items
+        //process program items and clean value with htmlspecialchars
         $data = htmlspecialchars($program_items);
+
         foreach (preg_split('/\n|\r\n?/', $data) as $line) {
             $array[] = $line; 
         };
+
         $array = json_encode($array);
+
         //set program items with processed data
         $course->setProgram_items($array);
         
@@ -137,7 +143,7 @@ class CourseController extends CoreController
         if($_FILES['picture']){   
             Upload::processUploadPicture($_FILES['picture'], $course);
         }
-     
+
         if ($course->insert()){   
             //TODO ajouter un message de succès
             //TODO rediriger vers le nouveau post créé
@@ -200,7 +206,7 @@ class CourseController extends CoreController
         $course = Course::find($id);
         $courses = Course::findAllPublishedCourses();
 
-        $this->show('form', ['courses' => $courses, 'course' => $course]);
+        $this->show('form', compact('course', 'courses'));
 
     }
 
@@ -214,10 +220,8 @@ class CourseController extends CoreController
         $course = Course::find($id);
 
         if ($course->delete($id)) {
-            unlink(__DIR__ . '/../../public/assets/images/' . $course->getPicture());
-
+            unlink(self::ROOT . $course->getPicture());
             Redirect::redirect('main-home');
-
         } else {
             throw new \Exception('Erreur lors de la suppression');
         } 
