@@ -18,6 +18,7 @@ class CourseController extends CoreController
     /**
      * List all courses
      * Home page
+     * @return mixed
      */
     public function showCourses()
     {   
@@ -61,6 +62,7 @@ class CourseController extends CoreController
     /**
      * Sort a course by the id
      * of url last segment value
+     * @return Course
      */
     public function showCourse()
     {   
@@ -85,28 +87,18 @@ class CourseController extends CoreController
     }
 
     /**
-     * Display the form to create a course
-     *
-     * @return void
-     */
-    public function showForm() 
-    {   
-
-        $id = UrlValue::findUrlLastSegment();
-        $course = Course::find($id);
-        $courses = Course::findAllPublishedCourses();
-        //$teachers = Teacher::findAllTeacher();
-        $teachers = Teacher::dynamicFindAll('teacher', Teacher::class, 'fetchAll', PDO::FETCH_CLASS);
-
-        $this->show('form', compact('course', 'courses', 'teachers'));
-    }
-
-    /**
      * Process the form to create new Course
-     * @return void
+     * Method GET : show the form
+     * Method POST : process the form
+     * @return response
      */
     public function courseCreate()
     {   
+        $teachers = Teacher::dynamicFindAll('teacher', Teacher::class, 'fetchAll', PDO::FETCH_CLASS);
+        // $id = UrlValue::findUrlLastSegment();
+        // $course = Course::find($id);
+        // dump($course);
+
         if (isset($_POST["publishCourseBtn"])) {
             //process post data
             $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -147,7 +139,7 @@ class CourseController extends CoreController
                 if (!empty($errors)) {
                     $this->show('form', [
                         'errors' => $errors,
-                        'course' => $course,
+                        'teachers' => $teachers,
                     ]);
                     //ajouter return pour ne pas executer le reste du code et ne pas ajouter le cours dans la base de données
                     //tant qu'il y a des erreurs dans le formulaire.
@@ -165,12 +157,14 @@ class CourseController extends CoreController
             }
         }
         //display the form
-        $this->show('form',[]);
+        $this->show('form',['teachers' => $teachers]);
     }
     
     /**
      * Process the form to update a course
-     * @return void
+     * Method GET : show the form
+     * Method POST : process the form
+     * @return response
      */
     public function courseUpdate()
     {   
@@ -255,7 +249,7 @@ class CourseController extends CoreController
 
     /**
      * Delete a course
-     * @return void
+     * @return response
      */
     public function courseDelete()
     {   
