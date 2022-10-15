@@ -45,11 +45,11 @@
            <label for="time" class="mt-2">Date</label>
               
               <input type="date" name="date" id="datePicker" value="" class="form-control datepicker" data-value="2019/09/20" placeholder="Choisir une date">
-
+                
                 <?php if (empty($date)) : ?>
-                  <?="<script> document.getElementById('datePicker').valueAsDate = new Date(); </script>" ?>
+                  <script> document.getElementById('datePicker').valueAsDate = new Date(); </script>
                 <?php else : ?>
-                  <?= "<script> document.getElementById('datePicker').valueAsDate = new Date('<?= $date ?>'); </script>"?>
+                  <script> document.getElementById('datePicker').valueAsDate = new Date('<?php echo $date ?>'); </script>
                 <?php endif; ?>
 
             <label for="teacher" class="mt-2">Professeur</label>
