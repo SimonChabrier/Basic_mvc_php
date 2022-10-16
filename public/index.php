@@ -1,6 +1,5 @@
 <?php
 
-use App\Controllers\ErrorController;
 use App\Utils\Acl;
 
 // .htaccess mis en place à la racine redirige toutes les URLs vers index.php
