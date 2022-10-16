@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Utils;
 
 //1 récupèrer le rôle du user
@@ -9,43 +8,34 @@ namespace App\Utils;
 //5 si non, on refuse l'accès 403
 
 class Acl
-{
-    public static function check($role, $route)
+{   
+    /**
+     * Méthode permettant de vérifier si l'utilisateur a le droit d'accéder à la page
+     * @param string $role
+     * @param string $routeName
+     * @return void
+     */
+    static function checkAcl($userRole, $route)
     {
-        //dump($role);
-        //dump($route);
 
-        $ressources = [
-            "course-form" => [ "ROLE_ADMIN", "ROLE_USER"],
+        $acl = [
+            "course-form" => [ "ROLE_ADMIN"],
         ];
-        //dump($ressources);
-        //est ce que la route est dans le tableau des ressources ?
-        //est ce que le role du user est dans le tableau des ressources ?
-        //est ce que les deux sont ok ?
 
-        foreach ($ressources as $route => $roleArray) {
-           //dump($ressources);
-           dump($route);
-           dump($roleArray);
-           if(array_key_exists($route, $ressources) && in_array($role, $roleArray)) {
-                dump('ok');
-               return true;
-           } else {
-            dump('pas ok');
-               return false;
-           }
+        if(array_key_exists($route, $acl)){
+        dump('la route est bien dans le tableau acl');
+            foreach ($acl as $route => $roleArray) {
+            dump('je controle le role du user dans le tableau des roles autorisés sur cette route');
+               if(array_key_exists($route, $acl) && in_array($userRole, $roleArray)) {
+                dump('ok le role du user est dans le tableau des roles autorisés sur cette route');
+                   return true;
+               } else {
+                    dump('403 pas ok le role du user n\'est pas dans le tableau des roles autorisés sur cette route');
+               }
+            } 
+        } else {
+            dump('la route n\'est pas dans le tableau acl');
+            return false;
         }
-
-        // if (array_key_exists($route, $ressources)) {
-        //     dump($role == $ressources[$route]);
-
-        //         if ($role == $ressources[$route]) {
-        //             return true;
-        //         } else {
-        //             return false;
-        //         }
-        //     }
-
-        
     }
 }

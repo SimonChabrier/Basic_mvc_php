@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+
 class ErrorController extends CoreController
 {
     /**
@@ -12,5 +13,17 @@ class ErrorController extends CoreController
     {
         header('HTTP/1.0 404 Not Found');
         $this->show('error/err404');
+        exit();
+    }
+
+     /**
+     * Méthode gérant une 403
+     * @return void
+     */
+    public function err403()
+    {
+        header('HTTP/1.0 403 Not Found');
+        $this->show('error/err403');
+        exit();
     }
 }

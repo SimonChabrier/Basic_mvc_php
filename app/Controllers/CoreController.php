@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\Course;
-use App\Models\User;
-use App\Utils\Acl;
 use PDO;
+use App\Utils\Acl;
+use App\Models\User;
+use App\Models\Course;
 
 class CoreController
 {   
@@ -24,8 +24,7 @@ class CoreController
         $viewData['routeinfo'] = $router->match();
         $viewData['currentPage'] = $viewName;
 
-        Acl::check('ROLE_USER', $viewData['routeinfo']['name']);
-        //dump($viewData['routeinfo']['name']);
+        //Acl::checkAcl('ROLE_USER', $viewData['routeinfo']['name']);
 
         //$viewData['assetsBaseUri'] = $_SERVER['BASE_URI'] . 'assets/';
         //$viewData['baseUri'] = $_SERVER['BASE_URI'];
