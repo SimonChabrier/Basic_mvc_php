@@ -17,29 +17,28 @@ class Acl
      * @param string $routeName
      * @return void
      */
-    static function checkAcl($userRole, $route)
+    static function checkAcl($role, $route)
     {
-
         $acl = [
-            "course-form" => ["ROLE_ADMIN"],
+            "course-form" => [ "ROLE_ADMIN" ],
         ];
 
-        if(array_key_exists($route, $acl)){
-        //dump('la route est bien dans le tableau acl');
+        if(array_key_exists($route, $acl))
+        {
             foreach ($acl as $route => $roleArray) {
             //dump('je controle le role du user dans le tableau des roles autorisés sur cette route');
-               if(array_key_exists($route, $acl) && in_array($userRole, $roleArray)) {
-                //dump('ok le role du user est dans le tableau des roles autorisés sur cette route');
+               if(array_key_exists($route, $acl) && in_array($role, $roleArray)) {
+                //dump('ok le role du user en session bien est dans le tableau des roles autorisés sur cette route');
                    return true;
                } else {
                     $error = new ErrorController();
                     $error->err403();
-                    //dump('403 pas ok le role du user n\'est pas dans le tableau des roles autorisés sur cette route');
+                    //dump('403 pas ok le role du user en session n\'est pas dans le tableau des roles autorisés sur cette route');
                     return false;
                }
             } 
         } else {
-            //dump('la route n\'est pas dans le tableau acl');
+            //dump('la route n\'est pas dans le tableau acl je retourne toujours true');
             return true;
         }
     }

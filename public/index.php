@@ -52,9 +52,12 @@ $router->addRoutes(
     ]
 );
 
-//check autorisation
+/* -------------
+--- 403 ---
+--------------*/
 $current_route_name = $router->match()['name'];
-Acl::checkAcl('ROLE_USER', $current_route_name);
+$current_user_role = $_SESSION['role'] ?? null;
+Acl::checkAcl($current_user_role, $current_route_name);
 
 /* -------------
 --- 404 ---
