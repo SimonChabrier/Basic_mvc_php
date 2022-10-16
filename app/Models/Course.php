@@ -15,32 +15,32 @@ class Course extends CourseRepository
     /**
      * @var string
      */
-    protected string $title ='default title';
+    protected string $title;
 
     /**
      * @var int
      */
-    protected int $price = 0;
+    protected int $price;
 
     /**
      * @var int
      */
-    protected int $duration = 0;
+    protected int $duration;
 
     /**
      * @var string
      */
-    protected $short_description = 'default short description';
+    protected $short_description;
 
     /**
      * @var text
      */
-    protected string $description = 'default description';
+    protected string $description;
 
     /**
      * @var string
      */
-    protected $picture = null;
+    protected $picture;
 
     /**
       * @var DateTime
@@ -68,6 +68,7 @@ class Course extends CourseRepository
 
     /**
      * @var string
+     * not null
      */
     protected $date;
  

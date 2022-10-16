@@ -35,9 +35,10 @@
           <?= isset($_SESSION['username']) ? '<span class="badge bg-primary"> Utilisateur connecté : ' . $_SESSION['username'] . '</span>' : '' ?> 
         </li>
         <li class="nav-item my-2">
-        <?php if(count($users)) : ?>
+        <?php if($users) : ?>
+        <?php $users = $users['COUNT(*)']; ?>
         <span class="badge bg-primary" style="margin-left: .5rem;">
-          <?= count($users) > 1 ? count($users) . ' utilisateurs enregistré ' : count($users) . ' utilisateur enregistré ' ?>  
+          <?= $users > 1 ? $users . ' utilisateurs enregistré ' : $users . ' utilisateur enregistré ' ?>  
         </span>
       <?php endif; ?>
         </li>

@@ -23,6 +23,21 @@ class UserRepository extends Query
         
         return $results;
     }
+
+    /**
+     * find All Users from Database
+     * @return array[]
+     */
+    static function findUserCount()
+    {
+        $pdo = Database::getPDO();
+        
+        $sql = 'SELECT COUNT(*) FROM `user`';
+        $pdoStatement = $pdo->query($sql);
+        $results = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+        
+        return $results;
+    }
     
     /**
      * find One User from Database

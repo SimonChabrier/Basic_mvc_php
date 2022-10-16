@@ -28,10 +28,12 @@ class CoreController
         // https://www.php.net/manual/fr/function.extract.php
         extract($viewData);
 
-        $users = User::dynamicFindAll('user', User::class, 'fetchAll', PDO::FETCH_CLASS);
+        //get Users to display User count in navbar
+        //$users = User::dynamicFindAll('user', User::class, 'fetchAll', PDO::FETCH_CLASS);
+        $users = User::findUserCount();
         extract($users);
         
-        // Each couse is now available in all views for navbar
+        //get Courses for navbar (select only course.id and course.title)
         $navValues = Course::findAllPublishedCourseForNav();
 
         dump($_SESSION);
