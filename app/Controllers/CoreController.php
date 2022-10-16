@@ -8,6 +8,7 @@ use App\Models\Course;
 
 class CoreController
 {   
+    
     /**
      * Méthode permettant d'afficher du code HTML en se basant sur les views
      * @param string $viewName Nom du fichier de vue
