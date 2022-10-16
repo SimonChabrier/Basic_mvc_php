@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use App\Models\Course;
 use App\Models\User;
+use App\Utils\Acl;
 use PDO;
 
 class CoreController
@@ -22,6 +23,9 @@ class CoreController
         global $router;
         $viewData['routeinfo'] = $router->match();
         $viewData['currentPage'] = $viewName;
+
+        Acl::check('ROLE_USER', $viewData['routeinfo']['name']);
+        //dump($viewData['routeinfo']['name']);
 
         //$viewData['assetsBaseUri'] = $_SERVER['BASE_URI'] . 'assets/';
         //$viewData['baseUri'] = $_SERVER['BASE_URI'];
