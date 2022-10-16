@@ -2,15 +2,11 @@
 
 namespace App\Controllers;
 use PDO;
-use App\Utils\Acl;
 use App\Models\User;
 use App\Models\Course;
-use App\Utils\Redirect;
-use App\Controllers\ErrorController;
 
 class CoreController
 {   
-    
     /**
      * Méthode permettant d'afficher du code HTML en se basant sur les views
      * @param string $viewName Nom du fichier de vue
@@ -19,16 +15,12 @@ class CoreController
      */
     protected function show(string $viewName, $viewData = [])
     {   
-        
-
         // Globalise l'instance courante d'AltoRouter crée sur l'index
         // cet objet permettra d'accéder aux méthodes d'AltoRouter dans les views
         // eg : $router->generate('main-home')...
         global $router;
         $viewData['routeinfo'] = $router->match();
         $viewData['currentPage'] = $viewName;
-
-        dump(Acl::checkAcl('ROLE_USER', $viewData['routeinfo']['name']));
 
         $viewData['assetsBaseUri'] = $_SERVER['HTTP_HOST'] . 'assets/';
         $viewData['baseUri'] = $_SERVER['HTTP_HOST'];

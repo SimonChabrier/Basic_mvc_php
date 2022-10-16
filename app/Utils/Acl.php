@@ -1,6 +1,8 @@
 <?php
 namespace App\Utils;
 
+use App\Controllers\ErrorController;
+
 //1 récupèrer le rôle du user
 //2 récupèrer le nom des routes : $viewData['routeinfo']['name']
 //3 vérifier si le rôle du user est dans les routes
@@ -19,23 +21,25 @@ class Acl
     {
 
         $acl = [
-            "course-form" => [ "ROLE_ADMIN"],
+            "course-form" => ["ROLE_ADMIN"],
         ];
 
         if(array_key_exists($route, $acl)){
-        dump('la route est bien dans le tableau acl');
+        //dump('la route est bien dans le tableau acl');
             foreach ($acl as $route => $roleArray) {
-            dump('je controle le role du user dans le tableau des roles autorisés sur cette route');
+            //dump('je controle le role du user dans le tableau des roles autorisés sur cette route');
                if(array_key_exists($route, $acl) && in_array($userRole, $roleArray)) {
-                dump('ok le role du user est dans le tableau des roles autorisés sur cette route');
+                //dump('ok le role du user est dans le tableau des roles autorisés sur cette route');
                    return true;
                } else {
-                    dump('403 pas ok le role du user n\'est pas dans le tableau des roles autorisés sur cette route');
+                    $error = new ErrorController();
+                    $error->err403();
+                    //dump('403 pas ok le role du user n\'est pas dans le tableau des roles autorisés sur cette route');
                     return false;
                }
             } 
         } else {
-            dump('la route n\'est pas dans le tableau acl');
+            //dump('la route n\'est pas dans le tableau acl');
             return true;
         }
     }

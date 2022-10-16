@@ -1,5 +1,8 @@
 <?php
 
+use App\Controllers\ErrorController;
+use App\Utils\Acl;
+
 // .htaccess mis en place à la racine redirige toutes les URLs vers index.php
 
 // ---------------------------------------------------------
@@ -48,6 +51,10 @@ $router->addRoutes(
         ['GET', '/logout', 'App\Controllers\UserController::logOut', 'user-logout']
     ]
 );
+
+//check autorisation
+$current_route_name = $router->match()['name'];
+Acl::checkAcl('ROLE_USER', $current_route_name);
 
 /* -------------
 --- 404 ---
