@@ -113,16 +113,4 @@ class UserRepository extends Query
 
         return $user;
     }
-
-    /**
-     * update User in Database
-     * @return bool
-     */
-    public function update()
-    {
-        $pdo = Database::getPDO();
-        
-        
-    }
-
 }

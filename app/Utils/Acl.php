@@ -21,6 +21,8 @@ class Acl
     {
         $acl = [
             "course-form" => [ "ROLE_ADMIN" ],
+            "update-course" => [ "ROLE_ADMIN" ],
+            "delete-course" => [ "ROLE_ADMIN" ],
         ];
 
         if(array_key_exists($route, $acl))
