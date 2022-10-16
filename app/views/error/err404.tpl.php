@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-3">
 <div class="alert alert-danger text-center" role="alert">
     <h1>RESSOURCE NON TROUVEE !!!</h1>
 </div>

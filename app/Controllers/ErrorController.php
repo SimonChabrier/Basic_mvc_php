@@ -22,7 +22,7 @@ class ErrorController extends CoreController
      */
     public function err403()
     {
-        header('HTTP/1.0 403 Not Found');
+        header('HTTP/1.1 403 Forbidden');
         $this->show('error/err403');
         exit();
     }
